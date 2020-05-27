@@ -20,9 +20,9 @@ steps:
     entrypoint: "bash"
     args: ["-c", "./cmds/clone.sh"]
 
-  # - name: gcr.io/cloud-builders/docker
-  #   entrypoint: "bash"
-  #   args: ["-c", "./cmds/pull.sh"]
+  - name: gcr.io/cloud-builders/docker
+    entrypoint: "bash"
+    args: ["-c", "./cmds/pull.sh"]
 
   - name: gcr.io/cloud-builders/docker
     entrypoint: "bash"
