@@ -1,0 +1,40 @@
+#! /bin/bash
+
+###
+# Main build process to cutting production images
+###
+
+set -e
+ROOT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
+cd $ROOT_DIR/..
+source config.sh
+
+# Use buildkit to speedup local builds
+# Not supported in google cloud build yet
+# Additionally set local
+if [[ -z $CLOUD_BUILD ]]; then
+  export DOCKER_BUILDKIT=1
+#   SCHOLARS_DISCOVERY_REPO_TAG='local-dev'
+fi
+
+# Scholars Discovery
+SCHOLARS_DISCOVERY_REPO_HASH=$(git -C $REPOSITORY_DIR/$SCHOLARS_DISCOVERY_REPO_NAME log -1 --pretty=%h)
+
+docker pull $UCD_LIB_DOCKER_ORG/$SCHOLARS_DISCOVERY_BUILD_IMAGE_NAME:$DOCKER_CACHE_TAG || true
+docker build \
+  -t $UCD_LIB_DOCKER_ORG/$SCHOLARS_DISCOVERY_BUILD_IMAGE_NAME:$SCHOLARS_DISCOVERY_REPO_TAG \
+  --build-arg BUILDKIT_INLINE_CACHE=1 \
+  -f $REPOSITORY_DIR/$SCHOLARS_DISCOVERY_REPO_NAME/Dockerfile.build.okd \
+  --cache-from $UCD_LIB_DOCKER_ORG/$SCHOLARS_DISCOVERY_BUILD_IMAGE_NAME:$DOCKER_CACHE_TAG \
+  --build-arg BUILDKIT_INLINE_CACHE=1 \
+  $REPOSITORY_DIR/$SCHOLARS_DISCOVERY_REPO_NAME
+
+docker pull $UCD_LIB_DOCKER_ORG/$SCHOLARS_DISCOVERY_IMAGE_NAME:$DOCKER_CACHE_TAG || true
+docker build \
+  -t $UCD_LIB_DOCKER_ORG/$SCHOLARS_DISCOVERY_IMAGE_NAME:$SCHOLARS_DISCOVERY_REPO_TAG \
+  --cache-from $UCD_LIB_DOCKER_ORG/$SCHOLARS_DISCOVERY_IMAGE_NAME:$DOCKER_CACHE_TAG \
+  --build-arg BUILDKIT_INLINE_CACHE=1 \
+  --build-arg SCHOLARS_DISCOVERY_BUILD_IMAGE_NAME=${SCHOLARS_DISCOVERY_BUILD_IMAGE_NAME} \
+  --build-arg SCHOLARS_DISCOVERY_REPO_TAG=${SCHOLARS_DISCOVERY_REPO_TAG} \
+  -f $REPOSITORY_DIR/$SCHOLARS_DISCOVERY_REPO_NAME/Dockerfile.runtime.okd \
+  $REPOSITORY_DIR/$SCHOLARS_DISCOVERY_REPO_NAME
