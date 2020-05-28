@@ -7,17 +7,17 @@ services:
   #     - ./io:/io
 
   vivo-solr:
-    image: ucdlib/vivo-solr:{{UCD_VIVO_REPO_TAG}}
+    image: ucdlib/vivo-solr:master
     volumes:
       - vivo-solr-data:/var/solr/data
 
   discovery-solr:
-    image: ucdlib/scholars-discovery-solr:{{SCHOLARS_DISCOVERY_REPO_TAG}}
+    image: ucdlib/scholars-discovery-solr:master
     volumes:
       - discovery-solr-data:/var/solr/data
 
   vivo:
-    image: ucdlib/rp-ucd-vivo:{{UCD_VIVO_REPO_TAG}}
+    image: ucdlib/rp-ucd-vivo:master
     volumes:
       - vivo-content-tdb:/usr/local/vivo/home/tdbContentModels
       - vivo-configuration-tdb:/usr/local/vivo/home/tdbModels
@@ -27,12 +27,10 @@ services:
       - vivo-solr
 
   discovery-api:
-    image: ucdlib/rp-ucd-scholars-discovery:{{SCHOLARS_DISCOVERY_REPO_TAG}}
-    depends_on:
-      - discovery-solr
+    image: ucdlib/rp-ucd-scholars-discovery:master
 
   gateway:
-    image: ucdlib/rp-ucd-service-gateway:{{UCD_SERVICE_GATEWAY_REPO_TAG}}
+    image: ucdlib/rp-ucd-service-gateway:master
     ports:
       - ${HOST_PORT:-8080}:8080
     restart: on-failure

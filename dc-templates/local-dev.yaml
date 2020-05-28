@@ -1,0 +1,58 @@
+#! /usr/bin/env yml-docker-compose.sh
+version: '3'
+services:
+
+  # harvest:
+  #   volumes:
+  #     - ./io:/io
+
+  vivo-solr:
+    image: ucdlib/vivo-solr:{{UCD_VIVO_REPO_TAG}}
+    volumes:
+      - vivo-solr-data:/var/solr/data
+      - ../repositories/rp-ucd-vivo/solr-vivo/vivocore:/opt/vivocore
+    # command: bash -c "tail -f /bin/bash"
+
+  discovery-solr:
+    image: ucdlib/scholars-discovery-solr:{{SCHOLARS_DISCOVERY_REPO_TAG}}
+    volumes:
+      - discovery-solr-data:/var/solr/data
+      - ../repositories/scholars-discovery/solr/conf:/opt/solr/server/solr/configsets/scholars-discovery/conf
+      - ../repositories/scholars-discovery/solr/setup.sh:/setup.sh
+
+  vivo:
+    image: ucdlib/rp-ucd-vivo:{{UCD_VIVO_REPO_TAG}}
+    volumes:
+      - vivo-content-tdb:/usr/local/vivo/home/tdbContentModels
+      - vivo-configuration-tdb:/usr/local/vivo/home/tdbModels
+      - vivo-upgrade-data:/usr/local/vivo/home/upgrade
+      - vivo-uploads-data:/usr/local/vivo/home/uploads
+    depends_on:
+      - vivo-solr
+
+  discovery-api:
+    image: ucdlib/rp-ucd-scholars-discovery:{{SCHOLARS_DISCOVERY_REPO_TAG}}
+    depends_on:
+      - vivo-solr
+
+  gateway:
+    image: ucdlib/rp-ucd-service-gateway:{{UCD_SERVICE_GATEWAY_REPO_TAG}}
+    ports:
+      - ${HOST_PORT:-8080}:8080
+    volumes:
+      - ../repositories/rp-ucd-service-gateway/cas.js:/proxy/cas.js
+      - ../repositories/rp-ucd-service-gateway/index.js:/proxy/index.js
+    environment:
+      - APP_URL=${APP_URL:-http://localhost:8080}
+      - CAS_URL=${CAS_URL:-https://ssodev.ucdavis.edu/cas}
+    restart: on-failure
+    # command: bash -c "tail -f /bin/bash"
+
+volumes:
+  harvest-data:
+  discovery-solr-data:
+  vivo-solr-data:
+  vivo-configuration-tdb:
+  vivo-content-tdb:
+  vivo-upgrade-data:
+  vivo-uploads-data:
