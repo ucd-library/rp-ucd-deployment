@@ -11,19 +11,23 @@ source config.sh
 
 # Use buildkit to speedup local builds
 # Not supported in google cloud build yet
-# Additionally set local
 if [[ -z $CLOUD_BUILD ]]; then
   export DOCKER_BUILDKIT=1
 fi
 
+# Additionally set local-dev tags used by 
+# local development docker-compose file
 if [[ ! -z $LOCAL_BUILD ]]; then
   SCHOLARS_DISCOVERY_REPO_TAG='local-dev'
 fi
 
+SCHOLARS_DISCOVERY_REPO_HASH=$(git -C $REPOSITORY_DIR/$SCHOLARS_DISCOVERY_REPO_NAME log -1 --pretty=%h)
+UCD_VIVO_REPO_HASH=$(git -C $REPOSITORY_DIR/$UCD_VIVO_REPO_NAME log -1 --pretty=%h)
+UCD_SERVICE_GATEWAY_REPO_HASH=$(git -C $REPOSITORY_DIR/$UCD_SERVICE_GATEWAY_REPO_NAME log -1 --pretty=%h)
+
 ##
 # Scholars Discovery
 ##
-SCHOLARS_DISCOVERY_REPO_HASH=$(git -C $REPOSITORY_DIR/$SCHOLARS_DISCOVERY_REPO_NAME log -1 --pretty=%h)
 
 # base image for scholars discovery
 docker build \
@@ -47,39 +51,43 @@ docker build \
 # scholars discovery solr instance
 docker build \
   -t $UCD_LIB_DOCKER_ORG/$SCHOLARS_DISCOVERY_SOLR_IMAGE_NAME:$SCHOLARS_DISCOVERY_REPO_TAG \
+  --cache-from $UCD_LIB_DOCKER_ORG/$SCHOLARS_DISCOVERY_SOLR_IMAGE_NAME:$DOCKER_CACHE_TAG \
+  --build-arg BUILDKIT_INLINE_CACHE=1 \
   $REPOSITORY_DIR/$SCHOLARS_DISCOVERY_REPO_NAME/solr
-  # --cache-from $UCD_LIB_DOCKER_ORG/$SCHOLARS_DISCOVERY_SOLR_IMAGE_NAME:$DOCKER_CACHE_TAG \
-  # --build-arg BUILDKIT_INLINE_CACHE=1 \
-  # $REPOSITORY_DIR/$SCHOLARS_DISCOVERY_REPO_NAME/solr
 
 # ucd implemenation of scholars discovery
 docker build \
   -t $UCD_LIB_DOCKER_ORG/$SCHOLARS_DISCOVERY_UCD_IMAGE_NAME:$UCD_VIVO_REPO_TAG \
   --build-arg SCHOLARS_DISCOVERY_IMAGE_NAME=${SCHOLARS_DISCOVERY_IMAGE_NAME} \
   --build-arg SCHOLARS_DISCOVERY_REPO_TAG=${SCHOLARS_DISCOVERY_REPO_TAG} \
+  --cache-from $UCD_LIB_DOCKER_ORG/$SCHOLARS_DISCOVERY_UCD_IMAGE_NAME:$DOCKER_CACHE_TAG \
+  --build-arg BUILDKIT_INLINE_CACHE=1 \
   $REPOSITORY_DIR/$UCD_VIVO_REPO_NAME/discovery
-  # --cache-from $UCD_LIB_DOCKER_ORG/$SCHOLARS_DISCOVERY_UCD_IMAGE_NAME:$DOCKER_CACHE_TAG \
-  # --build-arg BUILDKIT_INLINE_CACHE=1 \
-  # $REPOSITORY_DIR/$UCD_VIVO_REPO_NAME/discovery
 
 ##
 # VIVO
 ##
 
-UCD_VIVO_REPO_HASH=$(git -C $REPOSITORY_DIR/$UCD_VIVO_REPO_NAME log -1 --pretty=%h)
-
 # VIVO image
 docker build \
   -t $UCD_LIB_DOCKER_ORG/$VIVO_UCD_IMAGE_NAME:$UCD_VIVO_REPO_TAG \
+  --cache-from $UCD_LIB_DOCKER_ORG/$VIVO_UCD_IMAGE_NAME:$DOCKER_CACHE_TAG \
+  --build-arg BUILDKIT_INLINE_CACHE=1 \
   $REPOSITORY_DIR/$UCD_VIVO_REPO_NAME/vivo
-  # --cache-from $UCD_LIB_DOCKER_ORG/$VIVO_UCD_IMAGE_NAME:$DOCKER_CACHE_TAG \
-  # --build-arg BUILDKIT_INLINE_CACHE=1 \
-  # $REPOSITORY_DIR/$UCD_VIVO_REPO_NAME/vivo
 
 # VIVO solar image
 docker build \
   -t $UCD_LIB_DOCKER_ORG/$VIVO_SOLR_IMAGE_NAME:$UCD_VIVO_REPO_TAG \
+  --cache-from $UCD_LIB_DOCKER_ORG/$VIVO_SOLR_IMAGE_NAME:$DOCKER_CACHE_TAG \
+  --build-arg BUILDKIT_INLINE_CACHE=1 \
   $REPOSITORY_DIR/$UCD_VIVO_REPO_NAME/solr-vivo
-  # --cache-from $UCD_LIB_DOCKER_ORG/$VIVO_SOLR_IMAGE_NAME:$DOCKER_CACHE_TAG \
-  # --build-arg BUILDKIT_INLINE_CACHE=1 \
-  # $REPOSITORY_DIR/$UCD_VIVO_REPO_NAME/solr
+
+##
+# Service Gateway
+##
+
+docker build \
+  -t $UCD_LIB_DOCKER_ORG/$UCD_SERVICE_GATEWAY_IMAGE_NAME:$UCD_SERVICE_GATEWAY_TAG \
+  --cache-from $UCD_LIB_DOCKER_ORG/$UCD_SERVICE_GATEWAY_IMAGE_NAME:$DOCKER_CACHE_TAG \
+  --build-arg BUILDKIT_INLINE_CACHE=1 \
+  $REPOSITORY_DIR/$UCD_SERVICE_GATEWAY_REPO_NAME
