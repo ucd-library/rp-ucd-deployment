@@ -2,9 +2,12 @@
 version: '3'
 services:
 
-  # harvest:
-  #   volumes:
-  #     - ./io:/io
+  harvest:
+    image: ucdlib/rp-ucd-vivo-harvester:develop
+    volumes:
+      - ./io:/io
+      - ./harvester-raw-records:/usr/local/vivo/harvester/data/raw-records
+    command: bash -c "tail -f /dev/null"
 
   vivo-solr:
     image: ucdlib/vivo-solr:master
@@ -23,11 +26,19 @@ services:
       - vivo-configuration-tdb:/usr/local/vivo/home/tdbModels
       - vivo-upgrade-data:/usr/local/vivo/home/upgrade
       - vivo-uploads-data:/usr/local/vivo/home/uploads
+    environment:
+      - VIVO_SOLR_HOSTNAME=vivo-solr
     depends_on:
       - vivo-solr
 
   discovery-api:
     image: ucdlib/rp-ucd-scholars-discovery:master
+    environment:
+      - APP_URL=${APP_URL:-http://localhost:8080}
+      - DISCOVERY_SOLR_HOSTNAME=discovery-solr
+      - VIVO_BASE_URL=http://vivo:8080/vivo
+    depends_on:
+      - discovery-solr
 
   gateway:
     image: ucdlib/rp-ucd-service-gateway:master

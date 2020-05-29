@@ -2,16 +2,18 @@
 version: '3'
 services:
 
-  # harvest:
-  #   volumes:
-  #     - ./io:/io
+  harvest:
+    image: ucdlib/rp-ucd-vivo-harvester:{{VIVO_HARVESTER_REPO_TAG}}
+    volumes:
+      - ./io:/io
+      - ./harvester-raw-records:/usr/local/vivo/harvester/data/raw-records
+    command: bash -c "tail -f /dev/null"
 
   vivo-solr:
     image: ucdlib/vivo-solr:{{UCD_VIVO_REPO_TAG}}
     volumes:
       - vivo-solr-data:/var/solr/data
       - ../repositories/rp-ucd-vivo/solr-vivo/vivocore:/opt/vivocore
-    # command: bash -c "tail -f /bin/bash"
 
   discovery-solr:
     image: ucdlib/scholars-discovery-solr:{{SCHOLARS_DISCOVERY_REPO_TAG}}
@@ -22,18 +24,28 @@ services:
 
   vivo:
     image: ucdlib/rp-ucd-vivo:{{UCD_VIVO_REPO_TAG}}
+    ports:
+      - 8081:8080
     volumes:
       - vivo-content-tdb:/usr/local/vivo/home/tdbContentModels
       - vivo-configuration-tdb:/usr/local/vivo/home/tdbModels
       - vivo-upgrade-data:/usr/local/vivo/home/upgrade
       - vivo-uploads-data:/usr/local/vivo/home/uploads
+    environment:
+      - VIVO_SOLR_HOSTNAME=vivo-solr
     depends_on:
       - vivo-solr
 
   discovery-api:
     image: ucdlib/rp-ucd-scholars-discovery:{{SCHOLARS_DISCOVERY_REPO_TAG}}
+    volumes:
+      - ../repositories/rp-ucd-vivo/discovery/config.json:/opt/discovery-config.json
+    environment:
+      - APP_URL=${APP_URL:-http://localhost:8080}
+      - DISCOVERY_SOLR_HOSTNAME=discovery-solr
+      - VIVO_BASE_URL=http://vivo:8080/vivo
     depends_on:
-      - vivo-solr
+      - discovery-solr
 
   gateway:
     image: ucdlib/rp-ucd-service-gateway:{{UCD_SERVICE_GATEWAY_REPO_TAG}}
@@ -46,7 +58,7 @@ services:
       - APP_URL=${APP_URL:-http://localhost:8080}
       - CAS_URL=${CAS_URL:-https://ssodev.ucdavis.edu/cas}
     restart: on-failure
-    # command: bash -c "tail -f /bin/bash"
+    # command: bash -c "tail -f /dev/null"
 
 volumes:
   harvest-data:
