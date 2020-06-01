@@ -6,7 +6,7 @@ services:
     image: ucdlib/rp-ucd-vivo-harvester:{{VIVO_HARVESTER_REPO_TAG}}
     volumes:
       - ./io:/io
-      - ./harvester-raw-records:/usr/local/vivo/harvester/data/raw-records
+      - ./harvester-data:/usr/local/vivo/harvester/data
     command: bash -c "tail -f /dev/null"
 
   vivo-solr:
@@ -46,6 +46,15 @@ services:
       - VIVO_BASE_URL=http://vivo:8080/vivo
     depends_on:
       - discovery-solr
+
+  client:
+    image: ucdlib/rp-ucd-client:{{UCD_CLIENT_REPO_TAG}}
+    volumes:
+      - ../repositories/rp-ucd-client/lib:/server/lib
+      - ../repositories/rp-ucd-client/controllers:/server/controllers
+      - ../repositories/rp-ucd-client/client:/server/client
+      - ../repositories/rp-ucd-client/index.js:/server/index.js
+    # command: bash -c "tail -f /dev/null"
 
   gateway:
     image: ucdlib/rp-ucd-service-gateway:{{UCD_SERVICE_GATEWAY_REPO_TAG}}

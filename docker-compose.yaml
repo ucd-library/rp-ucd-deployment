@@ -40,6 +40,9 @@ services:
     depends_on:
       - discovery-solr
 
+  client:
+    image: ucdlib/rp-ucd-client:master
+
   gateway:
     image: ucdlib/rp-ucd-service-gateway:master
     ports:
