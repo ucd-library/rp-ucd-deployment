@@ -40,6 +40,8 @@ services:
     image: ucdlib/rp-ucd-scholars-discovery:{{SCHOLARS_DISCOVERY_REPO_TAG}}
     volumes:
       - ../repositories/rp-ucd-vivo/discovery/config.json:/opt/discovery-config.json
+    ports:
+      - 8082:9000
     environment:
       - APP_URL=${APP_URL:-http://localhost:8080}
       - DISCOVERY_SOLR_HOSTNAME=discovery-solr

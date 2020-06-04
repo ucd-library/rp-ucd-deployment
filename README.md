@@ -89,7 +89,10 @@ Local development notes.
 
 Here are the .env file parameters.
 
-  - `VIVO_CONTENT_TRIPLE_SOURCE`: defaults to `tdbContentTripleSource`.  To use Fueski, switch to `sparqlContentTripleSource`
+  - `HOST_PORT` - Optional.  Defaults to 8080.  Port to expose main service gateway on host machine.
+  - `APP_URL` - Optional.  Defaults to `http://localhost:8080`.  Base url application is hosted at.
+  - `CAS_URL` - Optional. Defaults to `https://ssodev.ucdavis.edu/cas`.  CAS endpoint to us.
+  - `VIVO_CONTENT_TRIPLE_SOURCE` - Optional. defaults to `tdbContentTripleSource`.  To use Fueski, switch to `sparqlContentTripleSource`
     - If you use Fueski, the following must be supplied as well:
     - `FUSEKI_HOSTNAME`
     - `FUSEKI_USERNAME`
