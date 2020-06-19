@@ -7,7 +7,21 @@ services:
     volumes:
       - ./io:/io
       - ./harvester-data:/usr/local/vivo/harvester/data
+    env_file:
+      - .env
     command: bash -c "tail -f /dev/null"
+
+  fuseki:
+    # image: ucdlib/fuseki:{{FUSEKI_REPO_TAG}}
+    image: stain/jena-fuseki
+    ports:
+      - 8083:3030
+    env_file:
+      - .env
+    # volumes:
+    #   - fuseki-data:/fuseki
+    environment:
+      - ADMIN_PASSWORD=${FUSEKI_PASSWORD}
 
   vivo-solr:
     image: ucdlib/vivo-solr:{{UCD_VIVO_REPO_TAG}}
@@ -15,12 +29,12 @@ services:
       - vivo-solr-data:/var/solr/data
       - ../repositories/rp-ucd-vivo/solr-vivo/vivocore:/opt/vivocore
 
-  discovery-solr:
-    image: ucdlib/scholars-discovery-solr:{{SCHOLARS_DISCOVERY_REPO_TAG}}
-    volumes:
-      - discovery-solr-data:/var/solr/data
-      - ../repositories/scholars-discovery/solr/conf:/opt/solr/server/solr/configsets/scholars-discovery/conf
-      - ../repositories/scholars-discovery/solr/setup.sh:/setup.sh
+  # discovery-solr:
+  #   image: ucdlib/scholars-discovery-solr:{{SCHOLARS_DISCOVERY_REPO_TAG}}
+  #   volumes:
+  #     - discovery-solr-data:/var/solr/data
+  #     - ../repositories/scholars-discovery/solr/conf:/opt/solr/server/solr/configsets/scholars-discovery/conf
+  #     - ../repositories/scholars-discovery/solr/setup.sh:/setup.sh
 
   vivo:
     image: ucdlib/rp-ucd-vivo:{{UCD_VIVO_REPO_TAG}}
@@ -33,19 +47,22 @@ services:
       - vivo-uploads-data:/usr/local/vivo/home/uploads
     environment:
       - VIVO_SOLR_HOSTNAME=vivo-solr
+      - FUSEKI_HOSTNAME=fuseki
+    env_file:
+      - .env
     depends_on:
       - vivo-solr
 
-  discovery-api:
-    image: ucdlib/rp-ucd-scholars-discovery:{{SCHOLARS_DISCOVERY_REPO_TAG}}
-    volumes:
-      - ../repositories/rp-ucd-vivo/discovery/config.json:/opt/discovery-config.json
-    environment:
-      - APP_URL=${APP_URL:-http://localhost:8080}
-      - DISCOVERY_SOLR_HOSTNAME=discovery-solr
-      - VIVO_BASE_URL=http://vivo:8080/vivo
-    depends_on:
-      - discovery-solr
+  # discovery-api:
+  #   image: ucdlib/rp-ucd-scholars-discovery:{{SCHOLARS_DISCOVERY_REPO_TAG}}
+  #   volumes:
+  #     - ../repositories/rp-ucd-vivo/discovery/config.json:/opt/discovery-config.json
+  #   environment:
+  #     - APP_URL=${APP_URL:-http://localhost:8080}
+  #     - DISCOVERY_SOLR_HOSTNAME=discovery-solr
+  #     - VIVO_BASE_URL=http://vivo:8080/vivo
+  #   depends_on:
+  #     - discovery-solr
 
   client:
     image: ucdlib/rp-ucd-client:{{UCD_CLIENT_REPO_TAG}}
@@ -54,6 +71,8 @@ services:
       - ../repositories/rp-ucd-client/controllers:/server/controllers
       - ../repositories/rp-ucd-client/client:/server/client
       - ../repositories/rp-ucd-client/index.js:/server/index.js
+    env_file:
+      - .env
     # command: bash -c "tail -f /dev/null"
 
   gateway:
@@ -66,11 +85,14 @@ services:
     environment:
       - APP_URL=${APP_URL:-http://localhost:8080}
       - CAS_URL=${CAS_URL:-https://ssodev.ucdavis.edu/cas}
+    env_file:
+      - .env
     restart: on-failure
     # command: bash -c "tail -f /dev/null"
 
 volumes:
   harvest-data:
+  fuseki-data:
   discovery-solr-data:
   vivo-solr-data:
   vivo-configuration-tdb:

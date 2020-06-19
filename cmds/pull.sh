@@ -14,3 +14,5 @@ source config.sh
 for image in "${ALL_DOCKER_IMAGES[@]}"; do
   docker pull $UCD_LIB_DOCKER_ORG/$image:$DOCKER_CACHE_TAG || true
 done
+
+docker pull docker.io/library/maven:3-jdk-8-slim

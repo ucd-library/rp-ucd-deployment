@@ -4,3 +4,4 @@ node_modules
 repositories
 rp-local-dev
 io
+.DS_Store
