@@ -31,6 +31,8 @@ services:
       - vivo-configuration-tdb:/usr/local/vivo/home/tdbModels
       - vivo-upgrade-data:/usr/local/vivo/home/upgrade
       - vivo-uploads-data:/usr/local/vivo/home/uploads
+    env_file:
+      - .env
     environment:
       - VIVO_SOLR_HOSTNAME=vivo-solr
     depends_on:
