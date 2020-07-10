@@ -49,10 +49,10 @@ services:
     env_file:
       - .env
     volumes:
-      - ../{{REPOSITORY_DIR}}/{{CLIENT_TAG}}/index.js:/server/index.js
-      - ../{{REPOSITORY_DIR}}/{{CLIENT_TAG}}/lib:/server/lib
-      - ../{{REPOSITORY_DIR}}/{{CLIENT_TAG}}/controllers:/server/controllers
-      - ../{{REPOSITORY_DIR}}/{{CLIENT_TAG}}/client:/server/client
+      - ../{{REPOSITORY_DIR}}/{{CLIENT_REPO_NAME}}/index.js:/server/index.js
+      - ../{{REPOSITORY_DIR}}/{{CLIENT_REPO_NAME}}/lib:/server/lib
+      - ../{{REPOSITORY_DIR}}/{{CLIENT_REPO_NAME}}/controllers:/server/controllers
+      - ../{{REPOSITORY_DIR}}/{{CLIENT_REPO_NAME}}/client:/server/client
     # command: bash -c "tail -f /dev/null"
 
   gateway:
