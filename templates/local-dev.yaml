@@ -2,7 +2,7 @@ version: '3'
 services:
 
   zookeeper:
-    image: zookeeper:3.4
+    image: {{ZOOKEEPER_IMAGE_NAME}}:{{ZOOKEEPER_TAG}}
     environment: 
       - ALLOW_ANONYMOUS_LOGIN=yes
     volumes:
@@ -10,12 +10,12 @@ services:
       - zookeeper-datalog:/datalog
 
   fuseki:
-    image: ucdlib/rp-ucd-fuseki:jena-3.15.0-c-0.0.2
+    image: {{FUSEKI_IMAGE_NAME}}:{{FUSEKI_TAG}}
     env_file:
       - .env
 
   kafka:
-    image: bitnami/kafka:latest
+    image: {{KAFKA_IMAGE_NAME}}:{{KAFKA_TAG}}
     env_file:
       - .env
     environment: 
@@ -28,12 +28,12 @@ services:
       - "zookeeper"
 
   redis:
-    image: redis:6.0.5
+    image: {{REDIS_IMAGE_NAME}}:{{REDIS_TAG}}
     volumes:
       - redis-data:/data
 
   elasticsearch:
-    image: docker.elastic.co/elasticsearch/elasticsearch:7.8.0
+    image: {{ELASTIC_SEARCH_IMAGE_NAME}}:{{ELASTIC_SEARCH_TAG}}
     environment:
       - bootstrap.memory_lock=true
       - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
@@ -45,31 +45,31 @@ services:
       - es-data:/usr/share/elasticsearch/data
 
   client:
-    image: ucdlib/rp-ucd-client:master
+    image: {{CLIENT_IMAGE_NAME}}:{{CLIENT_TAG}}
     env_file:
       - .env
     restart: on-failure
 
   gateway:
-    image: ucdlib/rp-ucd-gateway:master
+    image: {{GATEWAY_IMAGE_NAME}}:{{VESSEL_TAG}}
     env_file:
       - .env
     restart: on-failure
 
   api:
-    image: ucdlib/rp-ucd-api:master
+    image: {{API_IMAGE_NAME}}:{{VESSEL_TAG}}
     env_file:
       - .env
     restart: on-failure
 
   debouncer:
-    image: ucdlib/rp-ucd-kafka-debouncer:master
+    image: {{DEBOUNCER_IMAGE_NAME}}:{{VESSEL_TAG}}
     env_file:
       - .env
     restart: on-failure
 
   indexer:
-    image: ucdlib/rp-ucd-es-indexer:master
+    image: {{INDEXER_IMAGE_NAME}}:{{VESSEL_TAG}}
     env_file:
       - .env
     restart: on-failure
