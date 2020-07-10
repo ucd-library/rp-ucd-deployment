@@ -48,31 +48,47 @@ services:
     image: {{CLIENT_IMAGE_NAME}}:{{CLIENT_TAG}}
     env_file:
       - .env
-    restart: on-failure
+    volumes:
+      - ../{{REPOSITORY_DIR}}/{{CLIENT_TAG}}/index.js:/server/index.js
+      - ../{{REPOSITORY_DIR}}/{{CLIENT_TAG}}/lib:/server/lib
+      - ../{{REPOSITORY_DIR}}/{{CLIENT_TAG}}/controllers:/server/controllers
+      - ../{{REPOSITORY_DIR}}/{{CLIENT_TAG}}/client:/server/client
+    # command: bash -c "tail -f /dev/null"
 
   gateway:
     image: {{GATEWAY_IMAGE_NAME}}:{{VESSEL_TAG}}
     env_file:
       - .env
-    restart: on-failure
+    volumes:
+      - ../{{REPOSITORY_DIR}}/{{VESSEL_REPO_NAME}}/gateway/index.js:/service/index.js
+    # command: bash -c "tail -f /dev/null"
 
   api:
     image: {{API_IMAGE_NAME}}:{{VESSEL_TAG}}
     env_file:
       - .env
-    restart: on-failure
+    volumes:
+      - ../{{REPOSITORY_DIR}}/{{VESSEL_REPO_NAME}}/api/index.js:/service/index.js
+      - ../{{REPOSITORY_DIR}}/{{VESSEL_REPO_NAME}}/api/lib:/service/lib
+      - ../{{REPOSITORY_DIR}}/{{VESSEL_REPO_NAME}}/api/controllers:/service/controllers
+      - ../{{REPOSITORY_DIR}}/{{VESSEL_REPO_NAME}}/api/models:/service/models
+    # command: bash -c "tail -f /dev/null"
 
   debouncer:
     image: {{DEBOUNCER_IMAGE_NAME}}:{{VESSEL_TAG}}
     env_file:
       - .env
-    restart: on-failure
+    volumes:
+      - ../{{REPOSITORY_DIR}}/{{VESSEL_REPO_NAME}}/debouncer/index.js:/service/index.js
+    # command: bash -c "tail -f /dev/null"
 
   indexer:
     image: {{INDEXER_IMAGE_NAME}}:{{VESSEL_TAG}}
     env_file:
       - .env
-    restart: on-failure
+    volumes:
+      - ../{{REPOSITORY_DIR}}/{{VESSEL_REPO_NAME}}/es-indexer/index.js:/service/index.js
+    # command: bash -c "tail -f /dev/null"
 
 volumes:
   es-data:
