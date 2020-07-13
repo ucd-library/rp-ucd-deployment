@@ -63,7 +63,9 @@ To get started with local development, do the following:
     - `git clone https://github.com/ucd-library/rp-ucd-deployment`
   - Checkout the branch you wish to work on, ex:
     - `git checkout dev`
-  - In the same parent folder at you cloned `rp-ucd-deployment`, clone all git repositories for this deployment.  They are defined in `config.sh` in the `Repositories` section.  Make sure you checkout to the branches you wish to work on for each repository.
+    - `git checkout -b [my-new-feature]`
+  - In the same **parent** folder at you cloned `rp-ucd-deployment`, clone all git repositories for this deployment.  They are defined in `config.sh` in the `Repositories` section.  
+  IMPORATANT: Make sure you checkout to the branches you wish to work on for each repository.
   - Setup the `./repositories` folder.  There is a helper script for this:
     - `./cmds/init-local-dev.sh`
   - Create the docker-compose.yaml file:
@@ -73,7 +75,8 @@ To get started with local development, do the following:
 
 ## Local Development - Dev Cycle
 
-  - Make your code changes in your local folders.  You do not need to commit these changes.
+  - Make your code changes in your local repositories
+    - See note below, you do not need to rebuild images on every change.  Just certain changes.
   - Build the `local-dev` tagged images:
     - `./cmds/build-local-dev.sh`
   - Start the local environment:
@@ -86,7 +89,7 @@ Local development notes.
      - `docker-compose exec client bash`
      - `node index.js` - starts the server
      - `ctrl+c` - stops the server
-  - Code directories are mounted as volumes so changes to your host filesystem are reflected in container.
+  - Code directories are mounted as volumes so changes to your host filesystem are reflected in container.  However, changes to application packages (ex: package.json) will require rebuild of images (`./cmds/build-local-dev.sh`)
 
 # Env File
 
