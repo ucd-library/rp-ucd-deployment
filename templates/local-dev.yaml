@@ -1,0 +1,100 @@
+version: '3'
+services:
+
+  zookeeper:
+    image: {{ZOOKEEPER_IMAGE_NAME}}:{{ZOOKEEPER_TAG}}
+    environment: 
+      - ALLOW_ANONYMOUS_LOGIN=yes
+    volumes:
+      - zookeeper-data:/data
+      - zookeeper-datalog:/datalog
+
+  fuseki:
+    image: {{FUSEKI_IMAGE_NAME}}:{{FUSEKI_TAG}}
+    env_file:
+      - .env
+
+  kafka:
+    image: {{KAFKA_IMAGE_NAME}}:{{KAFKA_TAG}}
+    env_file:
+      - .env
+    environment: 
+      - ALLOW_PLAINTEXT_LISTENER=yes
+      - KAFKA_CFG_ZOOKEEPER_CONNECT=zookeeper:2181
+      - KAFKA_CLIENT_USER=admin
+    volumes: 
+      - kafka-data:/bitnami/kafka
+    depends_on:
+      - "zookeeper"
+
+  redis:
+    image: {{REDIS_IMAGE_NAME}}:{{REDIS_TAG}}
+    volumes:
+      - redis-data:/data
+
+  elasticsearch:
+    image: {{ELASTIC_SEARCH_IMAGE_NAME}}:{{ELASTIC_SEARCH_TAG}}
+    environment:
+      - bootstrap.memory_lock=true
+      - discovery.type=single-node
+      - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+    volumes:
+      - es-data:/usr/share/elasticsearch/data
+
+  client:
+    image: {{CLIENT_IMAGE_NAME}}:{{CLIENT_TAG}}
+    env_file:
+      - .env
+    volumes:
+      - ../{{REPOSITORY_DIR}}/{{CLIENT_REPO_NAME}}/index.js:/server/index.js
+      - ../{{REPOSITORY_DIR}}/{{CLIENT_REPO_NAME}}/lib:/server/lib
+      - ../{{REPOSITORY_DIR}}/{{CLIENT_REPO_NAME}}/controllers:/server/controllers
+      - ../{{REPOSITORY_DIR}}/{{CLIENT_REPO_NAME}}/client:/server/client
+    # command: bash -c "tail -f /dev/null"
+
+  gateway:
+    image: {{GATEWAY_IMAGE_NAME}}:{{VESSEL_TAG}}
+    env_file:
+      - .env
+    volumes:
+      - ../{{REPOSITORY_DIR}}/{{VESSEL_REPO_NAME}}/gateway/index.js:/service/index.js
+    # command: bash -c "tail -f /dev/null"
+
+  api:
+    image: {{API_IMAGE_NAME}}:{{VESSEL_TAG}}
+    env_file:
+      - .env
+    volumes:
+      - ../{{REPOSITORY_DIR}}/{{VESSEL_REPO_NAME}}/api/index.js:/service/index.js
+      - ../{{REPOSITORY_DIR}}/{{VESSEL_REPO_NAME}}/api/lib:/service/lib
+      - ../{{REPOSITORY_DIR}}/{{VESSEL_REPO_NAME}}/api/controllers:/service/controllers
+      - ../{{REPOSITORY_DIR}}/{{VESSEL_REPO_NAME}}/api/models:/service/models
+    # command: bash -c "tail -f /dev/null"
+
+  debouncer:
+    image: {{DEBOUNCER_IMAGE_NAME}}:{{VESSEL_TAG}}
+    env_file:
+      - .env
+    volumes:
+      - ../{{REPOSITORY_DIR}}/{{VESSEL_REPO_NAME}}/debouncer/index.js:/service/index.js
+    # command: bash -c "tail -f /dev/null"
+
+  indexer:
+    image: {{INDEXER_IMAGE_NAME}}:{{VESSEL_TAG}}
+    env_file:
+      - .env
+    volumes:
+      - ../{{REPOSITORY_DIR}}/{{VESSEL_REPO_NAME}}/es-indexer/index.js:/service/index.js
+    # command: bash -c "tail -f /dev/null"
+
+volumes:
+  es-data:
+  fuseki-data:
+  kafka-data:
+  zookeeper-data:
+  zookeeper-datalog:
+  redis-data:

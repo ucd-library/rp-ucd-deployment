@@ -4,4 +4,8 @@ node_modules
 repositories
 rp-local-dev
 io
+<<<<<<< HEAD
 .DS_Store
+=======
+.DS_Store
+>>>>>>> vessel

@@ -4,7 +4,7 @@ UC Davis Researcher Profiles Application Deployment
 
 # Application Setup
 
-The UC Davis Research Profiles (rp) application is a series of git repositories containing one or more Docker containers.  A build of the rp application is defined in the `config.sh` file where `*_REPO_TAG` variables define which git repository tag/branches will be used for the `APP_VERSION` of the application.
+The UC Davis Research Profiles (rp) application is a series of git repositories containing one or more Docker containers.  A build of the rp application is defined in the `config.sh` file where `*_TAG` variables define which git repository tag/branches or docker image tag (for external images) will be used for the `APP_VERSION` of the application.
 
 Each branch of this deployment repository corresponds to a deployed application environment; master = prod, dev = dev, etc.
 
@@ -20,10 +20,10 @@ To run the the application, simply clone this repository at the tag/branch you w
 
 Development deployments, any non-master branch (production) deployment, have relaxed rules for their deployment definition (`config.sh`) to facilitate rapid builds and testing.
 
-  - When starting work on a new feature you can set `APP_VERSION` to either: the branch name or a version up tick with a suffix of `-dev`, `-rc`, `-[branch name]`, etc.  ex: `APP_VERSION=v1.0.1-dev`.  You do not need to update this tag while you maks updates and redeployments.  The `APP_VERSION` tag can stay fixed throughout the feature development process.
-  - `*_REPO_TAG` variables can point at branches in development branches.  This allows you to create builds of the latest code without having to create new 'versions' very time you want to test.
+  - When starting work on a new feature you can set `APP_VERSION` to either: the branch name or a version up tick with a suffix of `-dev`, `-rc1`, `-rc2`, etc.  ex: `APP_VERSION=v1.0.1-dev`.  You do not need to update this tag while you make updates and redeployments.  The `APP_VERSION` tag can stay fixed throughout the feature development process.
+  - `*_TAG` variables can point at branches (instead of tags) in development branches (ONLY!).  This allows you to create builds of the latest code without having to create new 'versions' very time you want to test.
   - Branches `master`, `rc`, and `dev` will automatically build new images when this repository is pushed to GitHub.  However, in development you may wish to build without committing the repo.  For that case, simply run `./cmds/submit.sh` to start a new build.
-  - IMPORTANT.  When you are ready to commit changes, run `./cmds/generate-dc-files.sh` to build a new docker-compose.yml file of this deployment setup.  Then you can commit your changes.
+  - IMPORTANT.  When you are ready to commit changes, run `./cmds/generate-deployment-files.sh` to build a new docker-compose.yml file(s) and k8s files (TODO) of this deployment setup.  Then you can commit your changes.
 
 
 # Production Deployments
@@ -35,12 +35,12 @@ Production deployments follow strict rules.  Please follow below.
     - `git merge rc`
   - Uptick `APP_VERSION` in `config.sh` to the new production version of the application.  There should be no suffix.
   - Generate new docker-compose file
-    - `./cmds/generate-dc-files.sh`
+    - `./cmds/generate-deployment-files.sh`
   - Commit and push changes to this repository.  Set the commit message as the version tag if you have nothing better to say
     - `git add --all`
     - `git commit -m "[APP_VERSION]"`
     - `git push`
-  - On push all production images will be automatically built
+  - On push, all production images will be automatically built
   - Tag the commit with the `APP_VERSION`.
     - `git tag [APP_VERSION]`
     - `git push origin [APP_VERSION]`
@@ -50,7 +50,7 @@ Done!
 
 # Local Development
 
-Local development should be thought of has completely seperate from production or development deployments.  Local development images should NEVER leave your machine.  To deploy to a server use the [Development Deployment](#development-deployments) described above.
+Local development should be thought of has completely seperate from production or development deployments.  Local development images should NEVER leave your machine.  To protect agains local images deployed elsewhere, they will always be tagged with 'local-dev'.  To deploy development images to a server use the [Development Deployment](#development-deployments) described above.
 
 ## Local Development - Setup
 
@@ -64,8 +64,8 @@ To get started with local development, do the following:
   - Setup the `./repositories` folder.  There is a helper script for this:
     - `./cmds/init-local-dev.sh`
   - Create the docker-compose.yaml file:
-    - `./cmds/generate-dc-files.sh`
-    - Note: this file is ignored from git.  you can make changes at will, though these changes will be overwritten every time you run `generate-dc-files.sh`.  To makes permanent changes you will need to update the `./dc-templates/local-dev.yaml` script
+    - `./cmds/generate-deployment-files.sh`
+    - Note: the local development folder (rp-local-dev) is ignored from git.  you can make changes at will, though these changes will be overwritten every time you run `generate-deployment-files.sh`.  To makes permanent changes you will need to update the `./templates/local-dev.yaml` file
   - create your .env file [see below](#env-file)
 
 ## Local Development - Dev Cycle
@@ -80,8 +80,8 @@ Local development notes.
 
    - Most containers have a commented out `command: bash -c "tail -f /dev/null"` in the `./rp-local-dev/docker-compose.yaml`.  You can uncomment this so the container starts without running the default process. Then you can bash onto container to for faster start/stop of server to see changes. ex:
      - uncomment `command: bash -c "tail -f /dev/null"` under the `client` service
-     - `docker-compose exec server bash`
-     - `node index.sh` - starts the server
+     - `docker-compose exec client bash`
+     - `node index.js` - starts the server
      - `ctrl+c` - stops the server
   - Code directories are mounted as volumes so changes to your host filesystem are reflected in container.
 
@@ -89,11 +89,4 @@ Local development notes.
 
 Here are the .env file parameters.
 
-  - `HOST_PORT` - Optional.  Defaults to 8080.  Port to expose main service gateway on host machine.
-  - `APP_URL` - Optional.  Defaults to `http://localhost:8080`.  Base url application is hosted at.
-  - `CAS_URL` - Optional. Defaults to `https://ssodev.ucdavis.edu/cas`.  CAS endpoint to us.
-  - `VIVO_CONTENT_TRIPLE_SOURCE` - Optional. defaults to `tdbContentTripleSource`.  To use Fueski, switch to `sparqlContentTripleSource`
-    - If you use Fueski, the following must be supplied as well:
-    - `FUSEKI_HOSTNAME`
-    - `FUSEKI_USERNAME`
-    - `FUSEKI_PASSWORD`
+TODO
