@@ -2,6 +2,9 @@
 UC Davis Researcher Profiles Application Deployment
 
 
+Current architecture:
+https://docs.google.com/drawings/d/1hX61wnAj0LrOLnk1JHZdqgnlwrZEry2VTae6M59BYTg
+
 # Application Setup
 
 The UC Davis Research Profiles (rp) application is a series of git repositories containing one or more Docker containers.  A build of the rp application is defined in the `config.sh` file where `*_TAG` variables define which git repository tag/branches or docker image tag (for external images) will be used for the `APP_VERSION` of the application.
