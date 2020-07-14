@@ -3,7 +3,7 @@ UC Davis Researcher Profiles Application Deployment
 
 
 Current architecture:
-https://docs.google.com/drawings/d/1hX61wnAj0LrOLnk1JHZdqgnlwrZEry2VTae6M59BYTg
+https://docs.google.com/drawings/d/1TvNR2_PHlqCFE6ptN4bmAiF3V9OxUWFaNqtkuK3sWnc
 
 # Application Setup
 
