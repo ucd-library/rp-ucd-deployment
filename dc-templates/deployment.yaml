@@ -2,22 +2,10 @@
 version: '3'
 services:
 
-  harvest:
-    image: ucdlib/rp-ucd-vivo-harvester:{{VIVO_HARVESTER_REPO_TAG}}
-    volumes:
-      - ./io:/io
-      - ./harvester-raw-records:/usr/local/vivo/harvester/data/raw-records
-    command: bash -c "tail -f /dev/null"
-
   vivo-solr:
     image: ucdlib/vivo-solr:{{UCD_VIVO_REPO_TAG}}
     volumes:
       - vivo-solr-data:/var/solr/data
-
-  discovery-solr:
-    image: ucdlib/scholars-discovery-solr:{{SCHOLARS_DISCOVERY_REPO_TAG}}
-    volumes:
-      - discovery-solr-data:/var/solr/data
 
   vivo:
     image: ucdlib/rp-ucd-vivo:{{UCD_VIVO_REPO_TAG}}
@@ -26,34 +14,18 @@ services:
       - vivo-configuration-tdb:/usr/local/vivo/home/tdbModels
       - vivo-upgrade-data:/usr/local/vivo/home/upgrade
       - vivo-uploads-data:/usr/local/vivo/home/uploads
+      - ./vivo-docker-entrypoint.sh:/docker-entrypoint.sh
+      - ./wait-for-it.sh:/wait-for-it.sh
     env_file:
       - .env
     environment:
       - VIVO_SOLR_HOSTNAME=vivo-solr
     depends_on:
       - vivo-solr
-
-  discovery-api:
-    image: ucdlib/rp-ucd-scholars-discovery:{{SCHOLARS_DISCOVERY_REPO_TAG}}
-    environment:
-      - APP_URL=${APP_URL:-http://localhost:8080}
-      - DISCOVERY_SOLR_HOSTNAME=discovery-solr
-      - VIVO_BASE_URL=http://vivo:8080/vivo
-    depends_on:
-      - discovery-solr
-
-  client:
-    image: ucdlib/rp-ucd-client:{{UCD_CLIENT_REPO_TAG}}
-
-  gateway:
-    image: ucdlib/rp-ucd-service-gateway:{{UCD_SERVICE_GATEWAY_REPO_TAG}}
     ports:
-      - ${HOST_PORT:-8080}:8080
-    restart: on-failure
+      - 8080:8080
 
 volumes:
-  harvest-data:
-  discovery-solr-data:
   vivo-solr-data:
   vivo-configuration-tdb:
   vivo-content-tdb:
