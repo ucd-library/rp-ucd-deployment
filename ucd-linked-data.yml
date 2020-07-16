@@ -1,0 +1,43 @@
+# This Example yml can start and external FUSKEKI instance
+
+# I use this to manage the containers
+# alias ld-dc="docker-compose -p ucd-linked-data -f $(pwd)/ucd-linked-data.yml"
+
+# Then `ld-dc up -d` for example.
+
+# This compose file shoud have reasonable defaults, but
+# updates to .env (eg FUSEKI_VERSION=foo) will update the startup
+
+# A complete .env file might look like:
+#ADMIN_PASSWORD=quinnisgreat
+#JVM_ARGS=-Xmx4g
+#FUSEKI_EXTERNAL_PORT=6030
+#FUSEKI_VERSION=jena-3.15-c.0.0.3
+#KAFKA_ENABLED=false
+
+# The ENDPOINT Associated w/ the default is
+#FUSEKI_ENDPOINT=http://admin:quinnisgreat@fuseki:3030/{database}
+
+
+version: '3.5'
+
+services:
+  fuseki:
+    image: ucdlib/rp-ucd-fuseki:${FUSEKI_VERSION:-latest}
+    environment:
+      - JVM_ARGS=${JVM_ARGS:- -Xmx4g}
+      - ADMIN_PASSWORD=${ADMIN_PASSWORD:-quinnisgreat}
+      - KAFKA_ENABLED=${KAFKA_ENABLED:-false}
+    volumes:
+      - fuseki-data:/fuseki
+      - ./staging:/staging
+    ports:
+      - ${FUSEKI_EXTERNAL_PORT:-3030}:3030
+
+volumes:
+  fuseki-data:
+    driver: local
+
+networks:
+  default:
+    name: ${RP-NETWORK:-ucd-linked-data}
