@@ -40,4 +40,4 @@ volumes:
 
 networks:
   default:
-    name: ${RP-NETWORK:-ucd-linked-data}
+    name: ucd-linked-data

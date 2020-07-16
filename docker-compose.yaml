@@ -39,5 +39,5 @@ networks:
   default:
     name: vivo
   ucd-linked-data:
-    name: ${RP-NETWORK:-ucd-linked-data}
+    name: ucd-linked-data
     external: true
