@@ -1,5 +1,5 @@
 #! /usr/bin/env yml-docker-compose.sh
-version: '3'
+version: '3.5'
 services:
 
   vivo-solr:
@@ -24,6 +24,9 @@ services:
       - vivo-solr
     ports:
       - 8080:8080
+    networks:
+      - default
+      - ucd-linked-data
 
 volumes:
   vivo-solr-data:
@@ -31,3 +34,10 @@ volumes:
   vivo-content-tdb:
   vivo-upgrade-data:
   vivo-uploads-data:
+
+networks:
+  default:
+    name: vivo
+  ucd-linked-data:
+    name: ucd-linked-data
+    external: true
