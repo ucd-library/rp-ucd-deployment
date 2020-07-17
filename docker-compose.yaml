@@ -2,7 +2,7 @@ version: '3'
 services:
 
   zookeeper:
-    image: zookeeper:3.4
+    image: zookeeper:3.6
     environment: 
       - ALLOW_ANONYMOUS_LOGIN=yes
     volumes:
@@ -10,12 +10,12 @@ services:
       - zookeeper-datalog:/datalog
 
   fuseki:
-    image: ucdlib/rp-ucd-fuseki:jena-3.15.0-c-0.0.2
+    image: ucdlib/rp-ucd-fuseki:jena-3.15.0-c-0.0.3
     env_file:
       - .env
 
   kafka:
-    image: bitnami/kafka:latest
+    image: bitnami/kafka:2.5.0
     env_file:
       - .env
     environment: 

@@ -13,6 +13,13 @@ services:
     image: {{FUSEKI_IMAGE_NAME}}:{{FUSEKI_TAG}}
     env_file:
       - .env
+    environment:
+      - ADMIN_PASSWORD=${FUSEKI_PASSWORD}
+      - FUSEKI_DATASET_1=vivo
+    volumes:
+      - fuseki-data:/fuseki
+    ports:
+      - 3030:3030
 
   kafka:
     image: {{KAFKA_IMAGE_NAME}}:{{KAFKA_TAG}}
@@ -26,6 +33,8 @@ services:
       - kafka-data:/bitnami/kafka
     depends_on:
       - "zookeeper"
+    ports:
+      - 9092:9092
 
   redis:
     image: {{REDIS_IMAGE_NAME}}:{{REDIS_TAG}}
@@ -92,7 +101,9 @@ services:
       - .env
     volumes:
       - ../{{REPOSITORY_DIR}}/{{VESSEL_REPO_NAME}}/es-indexer/index.js:/service/index.js
-    # command: bash -c "tail -f /dev/null"
+      - ../{{REPOSITORY_DIR}}/{{VESSEL_REPO_NAME}}/es-indexer/reindex.js:/service/reindex.js
+      - ../{{REPOSITORY_DIR}}/{{VESSEL_REPO_NAME}}/es-indexer/lib:/service/lib
+      # command: bash -c "tail -f /dev/null"
 
 volumes:
   es-data:

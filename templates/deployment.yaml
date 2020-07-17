@@ -13,6 +13,10 @@ services:
     image: {{FUSEKI_IMAGE_NAME}}:{{FUSEKI_TAG}}
     env_file:
       - .env
+    environment:
+      - ADMIN_PASSWORD=${FUSEKI_PASSWORD}
+    volumes:
+      - fuseki-data:/fuseki
 
   kafka:
     image: {{KAFKA_IMAGE_NAME}}:{{KAFKA_TAG}}
