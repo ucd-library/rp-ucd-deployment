@@ -58,6 +58,13 @@ docker build \
   --build-arg NODEJS_BASE=${NODEJS_BASE} \
   $REPOSITORY_DIR/$VESSEL_REPO_NAME/api
 
+# auth
+docker build \
+  -t $AUTH_IMAGE_NAME:$VESSEL_TAG \
+  --build-arg BUILDKIT_INLINE_CACHE=1 \
+  --build-arg NODEJS_BASE=${NODEJS_BASE} \
+  $REPOSITORY_DIR/$VESSEL_REPO_NAME/auth-cas
+
 # gateway
 docker build \
   -t $GATEWAY_IMAGE_NAME:$VESSEL_TAG \

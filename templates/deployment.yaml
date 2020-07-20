@@ -59,6 +59,16 @@ services:
     image: {{GATEWAY_IMAGE_NAME}}:{{VESSEL_TAG}}
     env_file:
       - .env
+    ports:
+      - ${HOST_PORT:-8080}:3000
+    restart: on-failure
+
+  auth:
+    image: {{AUTH_IMAGE_NAME}}:{{VESSEL_TAG}}
+    env_file:
+      - .env
+    environment:
+      - CAS_URL=${CAS_URL:-https://ssodev.ucdavis.edu/cas}
     restart: on-failure
 
   api:

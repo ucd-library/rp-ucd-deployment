@@ -71,8 +71,22 @@ services:
     image: {{GATEWAY_IMAGE_NAME}}:{{VESSEL_TAG}}
     env_file:
       - .env
+    ports:
+      - 3000:${HOST_PORT:-8080}
     volumes:
       - ../{{REPOSITORY_DIR}}/{{VESSEL_REPO_NAME}}/gateway/index.js:/service/index.js
+      - ../{{REPOSITORY_DIR}}/{{VESSEL_REPO_NAME}}/gateway/controllers:/service/controllers
+    # command: bash -c "tail -f /dev/null"
+
+  auth:
+    image: {{AUTH_IMAGE_NAME}}:{{VESSEL_TAG}}
+    env_file:
+      - .env
+    environment:
+      - CAS_URL=${CAS_URL:-https://ssodev.ucdavis.edu/cas}
+    volumes:
+      - ../{{REPOSITORY_DIR}}/{{VESSEL_REPO_NAME}}/auth-cas/index.js:/service/index.js
+      - ../{{REPOSITORY_DIR}}/{{VESSEL_REPO_NAME}}/auth-cas/controller.js:/service/controller.js
     # command: bash -c "tail -f /dev/null"
 
   api:

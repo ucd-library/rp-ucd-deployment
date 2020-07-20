@@ -13,6 +13,10 @@ services:
     image: ucdlib/rp-ucd-fuseki:jena-3.15.0-c-0.0.3
     env_file:
       - .env
+    environment:
+      - ADMIN_PASSWORD=${FUSEKI_PASSWORD}
+    volumes:
+      - fuseki-data:/fuseki
 
   kafka:
     image: bitnami/kafka:2.5.0
@@ -53,6 +57,14 @@ services:
 
   gateway:
     image: ucdlib/rp-ucd-gateway:master
+    env_file:
+      - .env
+    ports:
+      - ${SERVER_PORT:-8080}:${HOST_PORT:-8080}
+    restart: on-failure
+
+  auth:
+    image: ucdlib/rp-ucd-auth-cas:master
     env_file:
       - .env
     restart: on-failure
