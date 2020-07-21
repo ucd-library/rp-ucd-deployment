@@ -82,6 +82,9 @@ To get started with local development, do the following:
   - Start the local environment:
     - `cd rp-local-dev; docker-compose up`
 
+  - Add admin
+    - docker-compose exec redis redis-cli set role-[username]-admin true
+
 Local development notes.
 
    - Most containers have a commented out `command: bash -c "tail -f /dev/null"` in the `./rp-local-dev/docker-compose.yaml`.  You can uncomment this so the container starts without running the default process. Then you can bash onto container to for faster start/stop of server to see changes. ex:
@@ -95,4 +98,4 @@ Local development notes.
 
 Here are the .env file parameters.
 
-TODO
+  - PRIVATE_SERVER: defaults to true.  must be explicity set to 'false' to allow public access.  Otherwise only users logged in with role 'admin' will be allowed.

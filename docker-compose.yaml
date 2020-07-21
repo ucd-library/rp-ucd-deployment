@@ -60,13 +60,15 @@ services:
     env_file:
       - .env
     ports:
-      - ${SERVER_PORT:-8080}:${HOST_PORT:-8080}
+      - ${HOST_PORT:-8080}:3000
     restart: on-failure
 
   auth:
     image: ucdlib/rp-ucd-auth-cas:master
     env_file:
       - .env
+    environment:
+      - CAS_URL=${CAS_URL:-https://ssodev.ucdavis.edu/cas}
     restart: on-failure
 
   api:
