@@ -2,6 +2,8 @@
 
 set -e
 
+CLUSTER_NAME="rp-${BRANCH_NAME}"
+
 echo "USER:$USER";
 echo "BRANCH_NAME:${BRANCH_NAME}";
 echo "CLUSTER_NAME:${CLUSTER_NAME}";
