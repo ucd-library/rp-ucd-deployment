@@ -1,0 +1,9 @@
+steps:
+
+  - name: gcr.io/cloud-builders/gcloud
+    entrypoint: 'bash'
+    args: [ '-c', 'CLUSTER_NAME="rp-$BRANCH_NAME" gcloud compute ssh $CLUTER_VM --zone="CLUSTER_ZONE" -- "/opt/${CLUSTER_NAME}/gcloud/dc-deploy.sh"' ]
+    env: 
+      - 'BRANCH_NAME=$BRANCH_NAME'
+      - 'CLUSER_ZONE=us-central1-a'
+      - 'CLUTER_VM=rp-ucd-deployments'
