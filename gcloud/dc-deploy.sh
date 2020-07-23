@@ -2,7 +2,9 @@
 
 set -e
 
-echo $USER 
+echo "USER:$USER";
+echo "BRANCH_NAME:${BRANCH_NAME}";
+echo "CLUSTER_NAME:${CLUSTER_NAME}";
 
 cd /opt/${CLUSTER_NAME}
 git reset HEAD --hard
