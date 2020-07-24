@@ -17,6 +17,8 @@ services:
       - ADMIN_PASSWORD=${FUSEKI_PASSWORD}
     volumes:
       - fuseki-data:/fuseki
+    ports: # still exposed for admin access
+      - 3030:3030
 
   kafka:
     image: bitnami/kafka:2.5.0
