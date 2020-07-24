@@ -69,25 +69,25 @@ ALL_DOCKER_BUILD_IMAGES=( $CLIENT_IMAGE_NAME $DEBOUNCER_IMAGE_NAME \
 # Google Kubernetes Engine (GKE)
 ##
 
-GKE_PROJECT_ID=digital-ucdavis-edu
-GKE_REGION=us-central1
-GKE_ZONE=${GKE_REGION}-a
-if [[ -z $BRANCH_NAME ]]; then
-  GKE_CLUSTER_NAME=$(git rev-parse --abbrev-ref HEAD)
-else
-  GKE_CLUSTER_NAME=$BRANCH_NAME
-fi
-GKE_CLUSTER_NAME="rp-${GKE_CLUSTER_NAME}"
-GKE_CLUSTER_VERSION=1.14.10
-GKE_CONFIG_DIR=k8s
+# GKE_PROJECT_ID=digital-ucdavis-edu
+# GKE_REGION=us-central1
+# GKE_ZONE=${GKE_REGION}-a
+# if [[ -z $BRANCH_NAME ]]; then
+#   GKE_CLUSTER_NAME=$(git rev-parse --abbrev-ref HEAD)
+# else
+#   GKE_CLUSTER_NAME=$BRANCH_NAME
+# fi
+# GKE_CLUSTER_NAME="rp-${GKE_CLUSTER_NAME}"
+# GKE_CLUSTER_VERSION=1.14.10
+# GKE_CONFIG_DIR=k8s
 
 # Main cluser IP addresses.  Tied to branch name.
 # see ./cmds/k8s/get-new-internal-ip.sh if setting up new cluster
 
-master_IP="10.128.0.21"
+# master_IP="10.128.0.21"
 
-IP_NAME="${GKE_CLUSTER_NAME}_IP"
-INTERNAL_IP=${!IP_NAME}
+# IP_NAME="${GKE_CLUSTER_NAME}_IP"
+# INTERNAL_IP=${!IP_NAME}
 
 ##
 # Git
