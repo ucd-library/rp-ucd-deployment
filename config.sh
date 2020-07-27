@@ -16,7 +16,7 @@ APP_VERSION=v0.0.2
 # Tags should always be used for production deployments
 # Branches can be used for development deployments
 VESSEL_TAG=master
-CLIENT_TAG=master
+CLIENT_TAG=dev
 
 FUSEKI_TAG=jena-3.15.0-c-0.0.3
 REDIS_TAG=6.0.5
