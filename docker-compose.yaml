@@ -52,7 +52,7 @@ services:
       - es-data:/usr/share/elasticsearch/data
 
   client:
-    image: ucdlib/rp-ucd-client:master
+    image: ucdlib/rp-ucd-client:dev
     env_file:
       - .env
     restart: on-failure
