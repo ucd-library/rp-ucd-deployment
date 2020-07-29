@@ -71,6 +71,8 @@ services:
     image: {{GATEWAY_IMAGE_NAME}}:{{VESSEL_TAG}}
     env_file:
       - .env
+    environment:
+      - PRIVATE_SERVER=${PRIVATE_SERVER:-false}
     ports:
       - ${HOST_PORT:-8080}:3000
     volumes:
@@ -117,6 +119,9 @@ services:
       - ../{{REPOSITORY_DIR}}/{{VESSEL_REPO_NAME}}/es-indexer/index.js:/service/index.js
       - ../{{REPOSITORY_DIR}}/{{VESSEL_REPO_NAME}}/es-indexer/reindex.js:/service/reindex.js
       - ../{{REPOSITORY_DIR}}/{{VESSEL_REPO_NAME}}/es-indexer/lib:/service/lib
+      - ../{{REPOSITORY_DIR}}/{{VESSEL_REPO_NAME}}/es-indexer/controllers:/service/controllers
+    ports:
+      - 3001:3000
       # command: bash -c "tail -f /dev/null"
 
 volumes:
