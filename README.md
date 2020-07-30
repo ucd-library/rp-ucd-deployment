@@ -5,6 +5,20 @@ UC Davis Researcher Profiles Application Deployment
 Current architecture:
 https://docs.google.com/drawings/d/1TvNR2_PHlqCFE6ptN4bmAiF3V9OxUWFaNqtkuK3sWnc
 
+
+# Contents
+  - [Application Setup](#application-setup)
+  - [Development deployments](#development-deployments)
+  - [Production Deployments](#production-deployments)
+  - [Local Development](#local-development)
+   - [Setup](#local-development---setup)
+   - [Dev Cycle](#local-development---dev-cycle)
+  - [Usage](#usage)
+    - [Env File](#env-file)
+    - [Endpoints](#endpoints)
+      - [Public Endpoints](#public-endpoints)
+      - [Private Endpoints](#private-endpoints)
+
 # Application Setup
 
 The UC Davis Research Profiles (rp) application is a series of git repositories containing one or more Docker containers.  A build of the rp application is defined in the `config.sh` file where `*_TAG` variables define which git repository tag/branches or docker image tag (for external images) will be used for the `APP_VERSION` of the application.
@@ -94,8 +108,75 @@ Local development notes.
      - `ctrl+c` - stops the server
   - Code directories are mounted as volumes so changes to your host filesystem are reflected in container.  However, changes to application packages (ex: package.json) will require rebuild of images (`./cmds/build-local-dev.sh`)
 
-# Env File
+# Usage
+
+## Env File
 
 Here are the .env file parameters.
 
-  - PRIVATE_SERVER: defaults to true.  must be explicity set to 'false' to allow public access.  Otherwise only users logged in with role 'admin' will be allowed.
+  - `SERVER_URL` Public url for rp system.  Defaults to http://localhost:8080
+  - `PRIVATE_SERVER` defaults to true.  must be explicity set to 'false' to allow public access.  Otherwise only users logged in with role 'admin' will be allowed.
+  - `HOST_PORT` host machine port to bind to, defaults to 8080
+  - `DEFAULT_ADMINS` common seperated list of users to ensure are in the system with role admin.
+  - `CLIENT_ENV` used by `ucd-rp-client` to select which folder to server for client.  Setting to `prod` will serve the `dist` folder, everything else will serve the `public` folder.  Defaults to dev.
+  - `JWT_EXPIRES_IN` Time in ms jwt expiration
+  - `JWT_COOKIE_NAME` name of jwt cookie.  defaults to `rp-ucd-jwt`.
+  - Fuseki. variables used to control fuseki.  Note some of these can be modified if you wish to attach to an external fuseki instance.
+    - Connection: `FUSEKI_USERNAME`, `FUSEKI_PASSWORD`, `FUSEKI_HOST`, `FUSEKI_PORT`, `FUSEKI_DATABASE`
+    - `FUSEKI_GRAPHS` comma seperated list of graphs to use in the fuseki dataset when creating an es model
+
+There are additional config variables you an use see in the main [config.js](https://github.com/ucd-library/vessel/blob/master/node-utils/lib/config.js) file.  However it is not recommend to change them unless you know what you are doing.
+
+## Endpoints
+
+This section covers the various api endpoints.  It's broken out by both public endpoint provided by the `gateway` and private endpoints provided by some services
+
+### Public Endpoints
+
+Below is a list of the public endpoint provided by the `gateway` service.  The gateway service should be the only host/port exposed to the public.
+
+By default the server will bind to localhost:8080, however the port can be modified with the `HOST_PORT` env variable.
+
+  - /
+    - Access the main client UI (`rp-ucd-client`).  All request not specifically defined in this [Public Endpoints](#public-endpoints) section will be routed to the `rp-ucd-client` service.
+  - /api
+    - Access the Swagger/OpenAPI3 JSON definition file.  Only the endpoints are listed below, please see OpenAPI definition for more information.  If running on localhost using standard 8080 port you can use: https://editor.swagger.io/?url=http://localhost:8080/api
+    - /api/:id
+    - /api/search
+    - /api/search/es
+  - /indexer/model/:type/:uri
+    - Get a on-the-fly es model.  `:type` should be a vivo type.  `:uri` should be a URI Encoded subject URI.
+  - /auth/login
+    - Login using CAS service.  Note, buy default the server is private and a user must use this endpoint to login.
+  - /auth/logout
+    - logout of rp system
+  - /fuseki
+    - Run a SPARQL query againts the http://fuseki:3030/vivo/query endpoint
+
+
+### Private Endpoints
+
+  - http://localhost:3030
+    - Fuseki UI.  Use /[dataset name]/query to run SPARQL query
+  - http://localhost:3001
+    - Access the indexer api.  Current access points are:
+    - /admin/reindex
+      - start a reindex of Fuseki dataset
+    - /model/:type:uri
+      - This is the same endpoint that is accessible via the public gateway at /reindexer/model/:type:uri.  Note, this is the only indexer endpoint that is publicly accessible.
+
+## Custom Models
+
+You can define custom models by mounting a directory with a `map.js` file and [model name].tpl.rq files.
+
+TODO: Expand on this.
+
+## Roles
+
+Currently you add roles via the `DEFAULT_ADMINS` env variable or by directly adding the role key to redis.
+
+Example, add user jrmerz@ucdavis.edu as role admin:
+
+```
+docker-compose exec redis redis-cli set role-jrmerz@ucdavis.edu-admin true
+```
