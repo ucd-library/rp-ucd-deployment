@@ -117,7 +117,8 @@ Here are the .env file parameters.
   - `SERVER_URL` Public url for rp system.  Defaults to http://localhost:8080
   - `PRIVATE_SERVER` defaults to true.  must be explicity set to 'false' to allow public access.  Otherwise only users logged in with role 'admin' will be allowed.
   - `HOST_PORT` host machine port for main public gateway to bind to, defaults to 8080
-  - `FUSEKI_HOST_PORT` host machine port for Fuseki instance to bind to, defaults to 3001.  This port should never be publicly accessible but is exposed to the host machine for data injest and Fuseki UI access.
+  - `FUSEKI_HOST_PORT` host machine port for Fuseki instance to bind to, defaults to 8081.  This port should never be publicly accessible but is exposed to the host machine for data injest and Fuseki UI access.
+  - `INDEXER_HOST_PORT` host machine port for index service to bind to, defaults to 8082.  This port should never be publicly accessible but is exposed to the host machine for access to the indexer rest api.  See [Private Endpoints](#private-endpoints) section.
   - `DEFAULT_ADMINS` common seperated list of users to ensure are in the system with role admin.
   - `CLIENT_ENV` used by `ucd-rp-client` to select which folder to server for client.  Setting to `prod` will serve the `dist` folder, everything else will serve the `public` folder.  Defaults to dev.
   - `JWT_EXPIRES_IN` Time in ms jwt expiration
@@ -157,9 +158,9 @@ By default the server will bind to localhost:8080, however the port can be modif
 
 ### Private Endpoints
 
-  - http://localhost:3030
+  - http://localhost:8081
     - Fuseki UI.  Use /[dataset name]/query to run SPARQL query
-  - http://localhost:3001
+  - http://localhost:8082
     - Access the indexer api.  Current access points are:
     - /admin/reindex
       - start a reindex of Fuseki dataset
