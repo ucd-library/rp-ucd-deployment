@@ -18,7 +18,7 @@ services:
     volumes:
       - fuseki-data:/fuseki
     ports: # still exposed for admin access
-      - 3030:3030
+      - ${FUSEKI_HOST_PORT:-3001}:3030
 
   kafka:
     image: {{KAFKA_IMAGE_NAME}}:{{KAFKA_TAG}}

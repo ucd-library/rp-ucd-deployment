@@ -116,7 +116,8 @@ Here are the .env file parameters.
 
   - `SERVER_URL` Public url for rp system.  Defaults to http://localhost:8080
   - `PRIVATE_SERVER` defaults to true.  must be explicity set to 'false' to allow public access.  Otherwise only users logged in with role 'admin' will be allowed.
-  - `HOST_PORT` host machine port to bind to, defaults to 8080
+  - `HOST_PORT` host machine port for main public gateway to bind to, defaults to 8080
+  - `FUSEKI_HOST_PORT` host machine port for Fuseki instance to bind to, defaults to 3001.  This port should never be publicly accessible but is exposed to the host machine for data injest and Fuseki UI access.
   - `DEFAULT_ADMINS` common seperated list of users to ensure are in the system with role admin.
   - `CLIENT_ENV` used by `ucd-rp-client` to select which folder to server for client.  Setting to `prod` will serve the `dist` folder, everything else will serve the `public` folder.  Defaults to dev.
   - `JWT_EXPIRES_IN` Time in ms jwt expiration
