@@ -163,7 +163,13 @@ By default the server will bind to localhost:8080, however the port can be modif
   - http://localhost:8082
     - Access the indexer api.  Current access points are:
     - /admin/reindex
-      - start a reindex of Fuseki dataset
+      - get the current status of the reindexer.  The reindexer handles the full load of Fuseki dataset into elastic search
+    - /admin/reindex/run/:type
+      - The the Fuseki dataset into elastic search.  Optional type parameter to only reindex all models of a single type
+    - /admin/reindex/rebuild-schema
+      - Used to create a new elastic search index when the elastic search schema has changed.  This will reindex into a new es index.  When complete the es alias will be set to the new index and all old indexes will be deleted.
+    - /admin/getCurrentIndexes
+      - Returns the current list of es indexes with details.
     - /model/:type:uri
       - This is the same endpoint that is accessible via the public gateway at /reindexer/model/:type:uri.  Note, this is the only indexer endpoint that is publicly accessible.
 

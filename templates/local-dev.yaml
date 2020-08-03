@@ -117,7 +117,6 @@ services:
       - .env
     volumes:
       - ../{{REPOSITORY_DIR}}/{{VESSEL_REPO_NAME}}/es-indexer/index.js:/service/index.js
-      - ../{{REPOSITORY_DIR}}/{{VESSEL_REPO_NAME}}/es-indexer/reindex.js:/service/reindex.js
       - ../{{REPOSITORY_DIR}}/{{VESSEL_REPO_NAME}}/es-indexer/lib:/service/lib
       - ../{{REPOSITORY_DIR}}/{{VESSEL_REPO_NAME}}/es-indexer/controllers:/service/controllers
     ports:
