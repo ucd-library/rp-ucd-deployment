@@ -116,6 +116,7 @@ Here are the .env file parameters.
 
   - `SERVER_URL` Public url for rp system.  Defaults to http://localhost:8080
   - `PRIVATE_SERVER` defaults to true.  must be explicity set to 'false' to allow public access.  Otherwise only users logged in with role 'admin' will be allowed.
+  - `ALLOWED_PATHS` If the server is private, these paths are always allowed.  Paths should be space separated regex with no start/end slashes and should point to login portal and assets.  /auth/.* is always in list.
   - `HOST_PORT` host machine port for main public gateway to bind to, defaults to 8080
   - `FUSEKI_HOST_PORT` host machine port for Fuseki instance to bind to, defaults to 8081.  This port should never be publicly accessible but is exposed to the host machine for data injest and Fuseki UI access.
   - `INDEXER_HOST_PORT` host machine port for index service to bind to, defaults to 8082.  This port should never be publicly accessible but is exposed to the host machine for access to the indexer rest api.  See [Private Endpoints](#private-endpoints) section.
@@ -125,7 +126,7 @@ Here are the .env file parameters.
   - `JWT_COOKIE_NAME` name of jwt cookie.  defaults to `rp-ucd-jwt`.
   - Fuseki. variables used to control fuseki.  Note some of these can be modified if you wish to attach to an external fuseki instance.
     - Connection: `FUSEKI_USERNAME`, `FUSEKI_PASSWORD`, `FUSEKI_HOST`, `FUSEKI_PORT`, `FUSEKI_DATABASE`
-    - `FUSEKI_GRAPHS` comma seperated list of graphs to use in the fuseki dataset when creating an es model
+    - `FUSEKI_GRAPHS` space seperated list of graphs to use in the fuseki dataset when creating an es model
 
 There are additional config variables you an use see in the main [config.js](https://github.com/ucd-library/vessel/blob/master/node-utils/lib/config.js) file.  However it is not recommend to change them unless you know what you are doing.
 
