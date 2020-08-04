@@ -188,3 +188,7 @@ Example, add user jrmerz@ucdavis.edu as role admin:
 ```
 docker-compose exec redis redis-cli set role-jrmerz@ucdavis.edu-admin true
 ```
+
+## Add Sample Data
+
+https://github.com/ucd-library/research-profiles/tree/master/examples/material_science
