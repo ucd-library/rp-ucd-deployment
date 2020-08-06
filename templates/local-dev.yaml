@@ -78,6 +78,7 @@ services:
     volumes:
       - ../{{REPOSITORY_DIR}}/{{VESSEL_REPO_NAME}}/gateway/index.js:/service/index.js
       - ../{{REPOSITORY_DIR}}/{{VESSEL_REPO_NAME}}/gateway/controllers:/service/controllers
+      - ../{{REPOSITORY_DIR}}/{{VESSEL_REPO_NAME}}/gateway/lib:/service/lib
     # command: bash -c "tail -f /dev/null"
 
   auth:
