@@ -117,6 +117,7 @@ Here are the .env file parameters.
   - `SERVER_URL` Public url for rp system.  Defaults to http://localhost:8080
   - `PRIVATE_SERVER` defaults to true.  must be explicity set to 'false' to allow public access.  Otherwise only users logged in with role 'admin' will be allowed.
   - `ALLOWED_PATHS` If the server is private, these paths are always allowed.  Paths should be space separated regex with no start/end slashes and should point to login portal and assets.  /auth/.* is always in list.
+  - `AUTH_SERVICE_LOGOUT_REDIRECT` and `AUTH_SERVICE_LOGIN_REDIRECT` specify paths to redirect user to after successful login/logout.  Both default to '/'.
   - `ALLOWED_ROLES` If the server is private, users with these roles are allowed access.  Roles should be space separated.  If not provided, only users with role 'admin' are allowed.  To allow any authenticated user, set `ALLOWED_ROLES=all`.
   - `HOST_PORT` host machine port for main public gateway to bind to, defaults to 8080
   - `FUSEKI_HOST_PORT` host machine port for Fuseki instance to bind to, defaults to 8081.  This port should never be publicly accessible but is exposed to the host machine for data injest and Fuseki UI access.
