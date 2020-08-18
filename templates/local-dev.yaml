@@ -101,6 +101,8 @@ services:
       - ../{{REPOSITORY_DIR}}/{{VESSEL_REPO_NAME}}/api/lib:/service/lib
       - ../{{REPOSITORY_DIR}}/{{VESSEL_REPO_NAME}}/api/controllers:/service/controllers
       - ../{{REPOSITORY_DIR}}/{{VESSEL_REPO_NAME}}/api/models:/service/models
+    ports:
+      - ${API_HOST_PORT:-8083}:3000
     # command: bash -c "tail -f /dev/null"
 
   debouncer:
