@@ -50,13 +50,13 @@ services:
       - es-data:/usr/share/elasticsearch/data
 
   client:
-    image: ucdlib/rp-ucd-client:master
+    image: ucdlib/rp-ucd-client:main
     env_file:
       - .env
     restart: on-failure
 
   gateway:
-    image: ucdlib/rp-ucd-gateway:master
+    image: ucdlib/rp-ucd-gateway:main
     env_file:
       - .env
     ports:
@@ -64,7 +64,7 @@ services:
     restart: on-failure
 
   auth:
-    image: ucdlib/rp-ucd-auth-cas:master
+    image: ucdlib/rp-ucd-auth-cas:main
     env_file:
       - .env
     environment:
@@ -72,19 +72,19 @@ services:
     restart: on-failure
 
   api:
-    image: ucdlib/rp-ucd-api:master
+    image: ucdlib/rp-ucd-api:main
     env_file:
       - .env
     restart: on-failure
 
   debouncer:
-    image: ucdlib/rp-ucd-kafka-debouncer:master
+    image: ucdlib/rp-ucd-kafka-debouncer:main
     env_file:
       - .env
     restart: on-failure
 
   indexer:
-    image: ucdlib/rp-ucd-es-indexer:master
+    image: ucdlib/rp-ucd-es-indexer:main
     env_file:
       - .env
     restart: on-failure
