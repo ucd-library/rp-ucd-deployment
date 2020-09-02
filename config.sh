@@ -15,8 +15,8 @@ APP_VERSION=v0.0.2
 # Repository tags/branchs
 # Tags should always be used for production deployments
 # Branches can be used for development deployments
-VESSEL_TAG=dev
-CLIENT_TAG=dev
+VESSEL_TAG=sandbox
+CLIENT_TAG=sandbox
 
 FUSEKI_TAG=jena-3.15.0-c-0.0.3
 REDIS_TAG=6.0.5
