@@ -6,7 +6,7 @@
 
 # Main version number we are tagging the app with. Always update
 # this when you cut a new version of the app!
-APP_VERSION=v0.0.2
+APP_VERSION=v0.1.0
 
 ##
 # TAGS
@@ -15,8 +15,8 @@ APP_VERSION=v0.0.2
 # Repository tags/branchs
 # Tags should always be used for production deployments
 # Branches can be used for development deployments
-VESSEL_TAG=sandbox
-CLIENT_TAG=sandbox
+VESSEL_TAG=dev
+CLIENT_TAG=dev
 
 FUSEKI_TAG=jena-3.15.0-c-0.0.3
 REDIS_TAG=6.0.5
