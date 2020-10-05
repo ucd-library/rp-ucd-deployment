@@ -10,13 +10,15 @@ services:
       - zookeeper-datalog:/datalog
 
   fuseki:
-    image: ucdlib/rp-ucd-fuseki:jena-3.15.0-c-0.0.3
+    image: ucdlib/rp-ucd-fuseki:1.0.0
     env_file:
       - .env
     environment:
       - ADMIN_PASSWORD=${FUSEKI_PASSWORD}
     volumes:
       - fuseki-data:/fuseki
+    ports: # still exposed for admin access
+      - ${FUSEKI_HOST_PORT:-8081}:3030
 
   kafka:
     image: bitnami/kafka:2.5.0
@@ -50,13 +52,13 @@ services:
       - es-data:/usr/share/elasticsearch/data
 
   client:
-    image: ucdlib/rp-ucd-client:main
+    image: ucdlib/rp-ucd-client:1.0.0
     env_file:
       - .env
     restart: on-failure
 
   gateway:
-    image: ucdlib/rp-ucd-gateway:main
+    image: ucdlib/rp-ucd-gateway:1.0.0
     env_file:
       - .env
     ports:
@@ -64,7 +66,7 @@ services:
     restart: on-failure
 
   auth:
-    image: ucdlib/rp-ucd-auth-cas:main
+    image: ucdlib/rp-ucd-auth-cas:1.0.0
     env_file:
       - .env
     environment:
@@ -72,21 +74,23 @@ services:
     restart: on-failure
 
   api:
-    image: ucdlib/rp-ucd-api:main
+    image: ucdlib/rp-ucd-api:1.0.0
     env_file:
       - .env
     restart: on-failure
 
   debouncer:
-    image: ucdlib/rp-ucd-kafka-debouncer:main
+    image: ucdlib/rp-ucd-kafka-debouncer:1.0.0
     env_file:
       - .env
     restart: on-failure
 
   indexer:
-    image: ucdlib/rp-ucd-es-indexer:main
+    image: ucdlib/rp-ucd-es-indexer:1.0.0
     env_file:
       - .env
+    ports:
+      - ${INDEXER_HOST_PORT:-8082}:3000
     restart: on-failure
 
 volumes:

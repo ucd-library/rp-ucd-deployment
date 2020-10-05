@@ -19,7 +19,7 @@ services:
     volumes:
       - fuseki-data:/fuseki
     ports:
-      - 3030:3030
+      - ${FUSEKI_HOST_PORT:-8081}:3030
 
   kafka:
     image: {{KAFKA_IMAGE_NAME}}:{{KAFKA_TAG}}
@@ -71,11 +71,14 @@ services:
     image: {{GATEWAY_IMAGE_NAME}}:{{VESSEL_TAG}}
     env_file:
       - .env
+    environment:
+      - PRIVATE_SERVER=${PRIVATE_SERVER:-false}
     ports:
       - ${HOST_PORT:-8080}:3000
     volumes:
       - ../{{REPOSITORY_DIR}}/{{VESSEL_REPO_NAME}}/gateway/index.js:/service/index.js
       - ../{{REPOSITORY_DIR}}/{{VESSEL_REPO_NAME}}/gateway/controllers:/service/controllers
+      - ../{{REPOSITORY_DIR}}/{{VESSEL_REPO_NAME}}/gateway/lib:/service/lib
     # command: bash -c "tail -f /dev/null"
 
   auth:
@@ -98,6 +101,8 @@ services:
       - ../{{REPOSITORY_DIR}}/{{VESSEL_REPO_NAME}}/api/lib:/service/lib
       - ../{{REPOSITORY_DIR}}/{{VESSEL_REPO_NAME}}/api/controllers:/service/controllers
       - ../{{REPOSITORY_DIR}}/{{VESSEL_REPO_NAME}}/api/models:/service/models
+    ports:
+      - ${API_HOST_PORT:-8083}:3000
     # command: bash -c "tail -f /dev/null"
 
   debouncer:
@@ -115,8 +120,10 @@ services:
       - .env
     volumes:
       - ../{{REPOSITORY_DIR}}/{{VESSEL_REPO_NAME}}/es-indexer/index.js:/service/index.js
-      - ../{{REPOSITORY_DIR}}/{{VESSEL_REPO_NAME}}/es-indexer/reindex.js:/service/reindex.js
       - ../{{REPOSITORY_DIR}}/{{VESSEL_REPO_NAME}}/es-indexer/lib:/service/lib
+      - ../{{REPOSITORY_DIR}}/{{VESSEL_REPO_NAME}}/es-indexer/controllers:/service/controllers
+    ports:
+      - ${INDEXER_HOST_PORT:-8082}:3000
       # command: bash -c "tail -f /dev/null"
 
 volumes:

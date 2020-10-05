@@ -35,6 +35,7 @@ NODEJS_BASE=$NODE_UTILS_IMAGE_NAME:$VESSEL_TAG
 docker build \
   -t $NODEJS_BASE \
   --build-arg BUILDKIT_INLINE_CACHE=1 \
+  --cache-from=$NODE_UTILS_IMAGE_NAME:$DOCKER_CACHE_TAG \
   $REPOSITORY_DIR/$VESSEL_REPO_NAME/node-utils
 
 # kafka rdf-patch debouncer
@@ -42,6 +43,7 @@ docker build \
   -t $DEBOUNCER_IMAGE_NAME:$VESSEL_TAG \
   --build-arg BUILDKIT_INLINE_CACHE=1 \
   --build-arg NODEJS_BASE=${NODEJS_BASE} \
+  --cache-from=$DEBOUNCER_IMAGE_NAME:$DOCKER_CACHE_TAG \
   $REPOSITORY_DIR/$VESSEL_REPO_NAME/debouncer
 
 # elastic search indexer
@@ -49,6 +51,7 @@ docker build \
   -t $INDEXER_IMAGE_NAME:$VESSEL_TAG \
   --build-arg BUILDKIT_INLINE_CACHE=1 \
   --build-arg NODEJS_BASE=${NODEJS_BASE} \
+  --cache-from=$INDEXER_IMAGE_NAME:$DOCKER_CACHE_TAG \
   $REPOSITORY_DIR/$VESSEL_REPO_NAME/es-indexer
 
 # elastic search api
@@ -56,6 +59,7 @@ docker build \
   -t $API_IMAGE_NAME:$VESSEL_TAG \
   --build-arg BUILDKIT_INLINE_CACHE=1 \
   --build-arg NODEJS_BASE=${NODEJS_BASE} \
+  --cache-from=$API_IMAGE_NAME:$DOCKER_CACHE_TAG \
   $REPOSITORY_DIR/$VESSEL_REPO_NAME/api
 
 # auth
@@ -63,6 +67,7 @@ docker build \
   -t $AUTH_IMAGE_NAME:$VESSEL_TAG \
   --build-arg BUILDKIT_INLINE_CACHE=1 \
   --build-arg NODEJS_BASE=${NODEJS_BASE} \
+  --cache-from=$AUTH_IMAGE_NAME:$DOCKER_CACHE_TAG \
   $REPOSITORY_DIR/$VESSEL_REPO_NAME/auth-cas
 
 # gateway
@@ -70,6 +75,7 @@ docker build \
   -t $GATEWAY_IMAGE_NAME:$VESSEL_TAG \
   --build-arg BUILDKIT_INLINE_CACHE=1 \
   --build-arg NODEJS_BASE=${NODEJS_BASE} \
+  --cache-from=$GATEWAY_IMAGE_NAME:$DOCKER_CACHE_TAG \
   $REPOSITORY_DIR/$VESSEL_REPO_NAME/gateway
 
 ##
@@ -80,4 +86,5 @@ docker build \
   -t $CLIENT_IMAGE_NAME:$CLIENT_TAG \
   --build-arg BUILDKIT_INLINE_CACHE=1 \
   --build-arg NODEJS_BASE=${NODEJS_BASE} \
+  --cache-from=$CLIENT_IMAGE_NAME:$DOCKER_CACHE_TAG \
   $REPOSITORY_DIR/$CLIENT_REPO_NAME

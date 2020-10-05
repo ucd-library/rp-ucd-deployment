@@ -16,14 +16,14 @@ if [ -d $REPOSITORY_DIR ] ; then
 fi
 mkdir -p $REPOSITORY_DIR
 
-# VESSEL
-$GIT_CLONE $VESSEL_REPO_URL.git \
-  --branch $VESSEL_TAG \
-  --depth 1 \
-  $REPOSITORY_DIR/$VESSEL_REPO_NAME
-
 # Client
 $GIT_CLONE $CLIENT_REPO_URL.git \
   --branch $CLIENT_TAG \
   --depth 1 \
   $REPOSITORY_DIR/$CLIENT_REPO_NAME
+
+# VESSEL
+$GIT_CLONE $VESSEL_REPO_URL.git \
+  --branch $VESSEL_TAG \
+  --depth 1 \
+  $REPOSITORY_DIR/$VESSEL_REPO_NAME
