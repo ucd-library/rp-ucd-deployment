@@ -78,7 +78,7 @@ To get started with local development, do the following:
   - Checkout the branch you wish to work on, ex:
     - `git checkout dev`
     - `git checkout -b [my-new-feature]`
-  - In the same **parent** folder at you cloned `rp-ucd-deployment`, clone all git repositories for this deployment.  They are defined in `config.sh` in the `Repositories` section.  
+  - In the same **parent** folder at you cloned `rp-ucd-deployment`, clone all git repositories for this deployment.  They are defined in `config.sh` in the `Repositories` section.
   IMPORATANT: Make sure you checkout to the branches you wish to work on for each repository.
   - Setup the `./repositories` folder.  There is a helper script for this:
     - `./cmds/init-local-dev.sh`
@@ -195,4 +195,42 @@ docker-compose exec redis redis-cli set role-jrmerz@ucdavis.edu-admin true
 
 ## Add Sample Data
 
-https://github.com/ucd-library/research-profiles/tree/master/examples/material_science
+To initialize a researcher database, you need to have valid linked data in the
+fuseki database.  On initialization, the `rp-ucd-fuseki` instance will check to
+see if any databases need to be installed before starting the fuseki server.
+This step needs to happen before the server is started in order to take
+advantage of the fast data uploads.  The fuseki container needs to know where
+the linked data is located, and what to import.   More information is available
+in the [rp-ucd-fuseki](https://github.com/ucd-library/rp-ucd-fuseki) project.
+
+Typically, local volumes are mounted into the image for initialization, and then
+the ~FUSEKI_DB_INIT~ flag is used to specify the database to install.  For
+example, the following steps hydrate the data for material_science
+
+``` bash
+cd ~/rp-ucd-deployment/rp-local-dev/
+git clone --single-branch --branch material_science
+https://gitlab.dams.library.ucdavis.edu/experts/experts-data.git
+
+```
+
+Then, the following changes to the YAML file will upload data on the next
+startup of your development setup.
+
+``` yaml
+  fuseki:
+    image: ucdlib/rp-ucd-fuseki:${FUSEKI_VERSION:-latest}
+    env_file:
+      - .env
+    environment:
+      - FUSEKI_DB_INIT=/staging/material_science
+    volumes:
+      - ./experts-data:/staging
+      - fuseki-data:/fuseki
+    ports:
+      - ${FUSEKI_HOST_PORT:-8081}:3030
+
+```
+
+The `rp-ucd-fuseki` container will not re-install an installed database, so you
+can leave the `FUSEKI_DB_INIT` setup while developing.
