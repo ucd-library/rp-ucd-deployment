@@ -85,7 +85,17 @@ To get started with local development, do the following:
   - Create the docker-compose.yaml file:
     - `./cmds/generate-deployment-files.sh`
     - Note: the local development folder (rp-local-dev) is ignored from git.  you can make changes at will, though these changes will be overwritten every time you run `generate-deployment-files.sh`.  To makes permanent changes you will need to update the `./templates/local-dev.yaml` file
-  - create your .env file [see below](#env-file)
+  - create your .env file [see below](#env-file).  Quick start sample:
+
+```
+PRIVATE_SERVER=false
+AUTH_PORTAL=/login.html
+
+FUSEKI_USERNAME=admin
+FUSEKI_PASSWORD=justinisgreat
+FUSEKI_DATABASE=material_science
+DEFAULT_ADMINS=jrmerz@ucdavis.edu quinn@ucdavis.edu
+```
 
 ## Local Development - Dev Cycle
 
@@ -195,4 +205,19 @@ docker-compose exec redis redis-cli set role-jrmerz@ucdavis.edu-admin true
 
 ## Add Sample Data
 
-https://github.com/ucd-library/research-profiles/tree/master/examples/material_science
+The current quick start for data.  
+  - In the same parent directory as this rp-ucd-deployment clone: https://gitlab.dams.library.ucdavis.edu/experts/experts-data
+    - You may need to ask for access
+  - Checkout the `material_science` branch
+  - The rp-local-dev docker-compose template mounts this repository by default if cloned in parent directory.  If you need to hydrate rp outside of `rp-local-dev` make sure you have the following in the `rp-ucd-fuseki` yaml file.
+    - environment:
+      - `FUSEKI_DB_INIT=/staging/material_science`
+    - volumes:
+      - `path/to/repo/experts-data:/staging`
+  - Make sure your `FUSEKI_DATABASE` in your .env file points at `FUSEKI_DATABASE=material_science`
+  - Start up docker-compose cluster, Duseki should automatically hydrate with data on start
+  - Once Fuseki is done importing data and starts (watch logs), run the reindexer
+    - `curl http://localhost:8082/admin/indexer/run`
+  - Once reindexer is complete (again watch logs), the system should be good to go
+
+TODO: link to external instructions when created

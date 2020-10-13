@@ -15,8 +15,10 @@ services:
       - .env
     environment:
       - ADMIN_PASSWORD=${FUSEKI_PASSWORD}
+      - FUSEKI_DB_INIT=/staging/material_science
     volumes:
       - fuseki-data:/fuseki
+      - ../../experts-data:/staging
     ports: # still exposed for admin access
       - ${FUSEKI_HOST_PORT:-8081}:3030
 
