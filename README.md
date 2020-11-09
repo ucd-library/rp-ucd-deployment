@@ -217,7 +217,7 @@ The current quick start for data.
   - Make sure your `FUSEKI_DATABASE` in your .env file points at `FUSEKI_DATABASE=material_science`
   - Start up docker-compose cluster, Duseki should automatically hydrate with data on start
   - Once Fuseki is done importing data and starts (watch logs), run the reindexer
-    - `curl http://localhost:8082/admin/indexer/run`
+    - `curl http://localhost:8082/admin/reindex/run`
   - Once reindexer is complete (again watch logs), the system should be good to go
 
 TODO: link to external instructions when created
