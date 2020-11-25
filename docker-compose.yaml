@@ -10,13 +10,15 @@ services:
       - zookeeper-datalog:/datalog
 
   fuseki:
-    image: ucdlib/rp-ucd-fuseki:jena-3.15.0-c-0.0.3
+    image: ucdlib/rp-ucd-fuseki:0.0.1
     env_file:
       - .env
     environment:
       - ADMIN_PASSWORD=${FUSEKI_PASSWORD}
+      - FUSEKI_DB_INIT=/staging/material_science
     volumes:
       - fuseki-data:/fuseki
+      - ../../experts-data:/staging
     ports: # still exposed for admin access
       - ${FUSEKI_HOST_PORT:-8081}:3030
 
