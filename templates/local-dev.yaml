@@ -15,9 +15,9 @@ services:
       - .env
     environment:
       - ADMIN_PASSWORD=${FUSEKI_PASSWORD}
-      - FUSEKI_DATASET_1=vivo
     volumes:
       - fuseki-data:/fuseki
+      - ./io:/staging
     ports:
       - ${FUSEKI_HOST_PORT:-8081}:3030
 

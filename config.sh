@@ -18,7 +18,11 @@ APP_VERSION=v0.1.0
 VESSEL_TAG=sandbox
 CLIENT_TAG=sandbox
 
+<<<<<<< Updated upstream
 FUSEKI_TAG=1.0.0
+=======
+FUSEKI_TAG=1.1.1
+>>>>>>> Stashed changes
 REDIS_TAG=6.0.5
 ZOOKEEPER_TAG=3.6
 KAFKA_TAG=2.5.0
