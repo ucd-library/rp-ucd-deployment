@@ -195,4 +195,8 @@ docker-compose exec redis redis-cli set role-jrmerz@ucdavis.edu-admin true
 
 ## Add Sample Data
 
+This is the way
+https://gitlab.dams.library.ucdavis.edu/experts/experts-data/tree/experts-dev#experts-data
+
+Old Way
 https://github.com/ucd-library/research-profiles/tree/master/examples/material_science
