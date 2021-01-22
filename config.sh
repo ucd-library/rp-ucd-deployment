@@ -6,7 +6,7 @@
 
 # Main version number we are tagging the app with. Always update
 # this when you cut a new version of the app!
-APP_VERSION=v1.1-alpha.1
+APP_VERSION=v1.1.0-alpha.1
 
 ##
 # TAGS
