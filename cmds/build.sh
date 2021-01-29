@@ -88,6 +88,8 @@ docker build \
   --build-arg NODEJS_BASE=${NODEJS_BASE} \
   --build-arg CLIENT_TAG=${CLIENT_TAG} \
   --build-arg VESSEL_TAG=${VESSEL_TAG} \
+  --build-arg BUILD_NUM=${BUILD_NUM} \
+  --build-arg BUILD_TIME=${BUILD_TIME} \
   --build-arg APP_VERSION=${APP_VERSION} \
   --cache-from=$CLIENT_IMAGE_NAME:$DOCKER_CACHE_TAG \
   $REPOSITORY_DIR/$CLIENT_REPO_NAME

@@ -4,9 +4,17 @@
 # Setup your application deployment here
 ########################################
 
+# Grab build number is mounted in CI system
+if [[ -f /config/.buildenv ]]; then
+  source /config/.buildenv
+else
+  BUILD_NUM=-1
+fi
+
+
 # Main version number we are tagging the app with. Always update
 # this when you cut a new version of the app!
-APP_VERSION=v1.1.0-alpha.5
+APP_VERSION=v1.1.0-alpha.${BUILD_NUM}
 
 ##
 # TAGS
