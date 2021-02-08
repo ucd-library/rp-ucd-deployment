@@ -3,33 +3,40 @@ services:
 
   zookeeper:
     image: zookeeper:3.6
-    environment: 
+    environment:
       - ALLOW_ANONYMOUS_LOGIN=yes
     volumes:
       - zookeeper-data:/data
       - zookeeper-datalog:/datalog
 
   fuseki:
-    image: ucdlib/rp-ucd-fuseki:1.1.0
+    image: ucdlib/rp-ucd-fuseki:${FUSEKI_VERSION:-1.1.4}
     env_file:
       - .env
-    environment:
-      - ADMIN_PASSWORD=${FUSEKI_PASSWORD}
     volumes:
       - fuseki-data:/fuseki
-      - ./io:/staging
     ports: # still exposed for admin access
       - ${FUSEKI_HOST_PORT:-8081}:3030
+
+  harvest:
+    image: ucdlib/rp-ucd-harvest:1.0.0
+    command: tail -f /dev/null
+    env_file:
+      - .env
+    volumes:
+       - harvest-xslt-data:/usr/local/vivo/harvester/data
+       - harvest-data:/var/lib/harvest
+       - ../rp-ucd-harvest/lib:/usr/local/lib/harvest
 
   kafka:
     image: bitnami/kafka:2.5.0
     env_file:
       - .env
-    environment: 
+    environment:
       - ALLOW_PLAINTEXT_LISTENER=yes
       - KAFKA_CFG_ZOOKEEPER_CONNECT=zookeeper:2181
       - KAFKA_CLIENT_USER=admin
-    volumes: 
+    volumes:
       - kafka-data:/bitnami/kafka
     depends_on:
       - "zookeeper"
@@ -101,3 +108,5 @@ volumes:
   zookeeper-data:
   zookeeper-datalog:
   redis-data:
+  harvest-xslt-data:
+  harvest-data:

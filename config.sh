@@ -15,10 +15,10 @@ APP_VERSION=v0.1.1
 # Repository tags/branchs
 # Tags should always be used for production deployments
 # Branches can be used for development deployments
-VESSEL_TAG=dev
+VESSEL_TAG=sandbox
 CLIENT_TAG=dev
 
-FUSEKI_TAG=1.1.0
+FUSEKI_TAG=1.1.4
 REDIS_TAG=6.0.5
 ZOOKEEPER_TAG=3.6
 KAFKA_TAG=2.5.0
