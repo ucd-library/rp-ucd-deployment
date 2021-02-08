@@ -4,9 +4,17 @@
 # Setup your application deployment here
 ########################################
 
+# Grab build number is mounted in CI system
+if [[ -f /config/.buildenv ]]; then
+  source /config/.buildenv
+else
+  BUILD_NUM=-1
+fi
+
+
 # Main version number we are tagging the app with. Always update
 # this when you cut a new version of the app!
-APP_VERSION=v0.1.1
+APP_VERSION=v1.1.0-alpha.${BUILD_NUM}
 
 ##
 # TAGS
@@ -16,7 +24,7 @@ APP_VERSION=v0.1.1
 # Tags should always be used for production deployments
 # Branches can be used for development deployments
 VESSEL_TAG=sandbox
-CLIENT_TAG=dev
+CLIENT_TAG=sandbox
 
 FUSEKI_TAG=1.1.4
 REDIS_TAG=6.0.5

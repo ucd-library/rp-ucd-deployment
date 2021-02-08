@@ -1,5 +1,29 @@
 steps:
 
+  - name: 'gcr.io/cloud-builders/gsutil'
+    # id: copy_config
+    # waitFor: ['-']
+    args: ['rsync', 'gs://${_CONFIG_BUCKET}/${_CONFIG_PROJECT}', '/config']
+    volumes:
+    - name: 'config'
+      path: '/config'
+
+  - name: 'gcr.io/$PROJECT_ID/ci-buildnum'
+    # id: setup_env
+    args: ['/config/buildnum', '/config/.buildenv']
+    # waitFor: ['copy_config']
+    volumes:
+    - name: 'config'
+      path: '/config'
+
+  - name: 'gcr.io/cloud-builders/gsutil'
+    # id: save_config
+    args: ['cp', '/config/buildnum', 'gs://${_CONFIG_BUCKET}/${_CONFIG_PROJECT}/buildnum']
+    # waitFor: ['setup_env']
+    volumes:
+    - name: 'config'
+      path: '/config'
+
   - name: gcr.io/cloud-builders/gcloud
     entrypoint: 'bash'
     args: [ '-c', 'gcloud secrets versions access latest --secret=libosdev-dockerhub-secret > pass.txt' ]
@@ -29,10 +53,16 @@ steps:
     args: ["-c", "./cmds/build.sh"]
     env: 
       - 'CLOUD_BUILD=true'
+    volumes:
+    - name: 'config'
+      path: '/config'
 
   - name: gcr.io/cloud-builders/docker
     entrypoint: "bash"
     args: ["-c", "./cmds/push.sh"]
+    volumes:
+    - name: 'config'
+      path: '/config'
 
   # - name: gcr.io/cloud-builders/gcloud
   #   entrypoint: 'bash'
@@ -42,5 +72,9 @@ steps:
   #     - 'CLUSTER_NAME=rp-$BRANCH_NAME'
   #     - 'CLUSTER_ZONE=us-central1-a'
   #     - 'CLUSTER_VM=rp-ucd-deployments'
+
+substitutions:
+  _CONFIG_BUCKET: ci-build-config
+  _CONFIG_PROJECT: researcher-profiles
 
 timeout: 1800s

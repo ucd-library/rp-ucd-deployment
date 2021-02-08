@@ -78,7 +78,7 @@ To get started with local development, do the following:
   - Checkout the branch you wish to work on, ex:
     - `git checkout dev`
     - `git checkout -b [my-new-feature]`
-  - In the same **parent** folder at you cloned `rp-ucd-deployment`, clone all git repositories for this deployment.  They are defined in `config.sh` in the `Repositories` section.  
+  - In the same **parent** folder at you cloned `rp-ucd-deployment`, clone all git repositories for this deployment.  They are defined in `config.sh` in the `Repositories` section.
   IMPORATANT: Make sure you checkout to the branches you wish to work on for each repository.
   - Setup the `./repositories` folder.  There is a helper script for this:
     - `./cmds/init-local-dev.sh`
@@ -205,19 +205,8 @@ docker-compose exec redis redis-cli set role-jrmerz@ucdavis.edu-admin true
 
 ## Add Sample Data
 
-The current quick start for data.  
-  - In the same parent directory as this rp-ucd-deployment clone: https://gitlab.dams.library.ucdavis.edu/experts/experts-data
-    - You may need to ask for access
-  - Checkout the `material_science` branch
-  - The rp-local-dev docker-compose template mounts this repository by default if cloned in parent directory.  If you need to hydrate rp outside of `rp-local-dev` make sure you have the following in the `rp-ucd-fuseki` yaml file.
-    - environment:
-      - `FUSEKI_DB_INIT=/staging/material_science`
-    - volumes:
-      - `path/to/repo/experts-data:/staging`
-  - Make sure your `FUSEKI_DATABASE` in your .env file points at `FUSEKI_DATABASE=material_science`
-  - Start up docker-compose cluster, Duseki should automatically hydrate with data on start
-  - Once Fuseki is done importing data and starts (watch logs), run the reindexer
-    - `curl http://localhost:8082/admin/reindex/run`
-  - Once reindexer is complete (again watch logs), the system should be good to go
+This is the way
+https://gitlab.dams.library.ucdavis.edu/experts/experts-data/tree/experts-dev#experts-data
 
-TODO: link to external instructions when created
+Old Way
+https://github.com/ucd-library/research-profiles/tree/master/examples/material_science
