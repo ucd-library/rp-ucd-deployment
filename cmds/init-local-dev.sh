@@ -22,3 +22,7 @@ cd ./repositories
 for repo in "${ALL_GIT_REPOSITORIES[@]}"; do
   ln -s ../../$repo .
 done
+
+cd $REPOSITORY_DIR/$HARVEST_REPO_NAME
+git submodule update --init --recursive
+cd $ROOT_DIR/..
