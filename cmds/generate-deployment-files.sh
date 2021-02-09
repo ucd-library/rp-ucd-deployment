@@ -39,6 +39,7 @@ ELASTIC_SEARCH_IMAGE_NAME_ESCAPED=$(echo $ELASTIC_SEARCH_IMAGE_NAME | sed 's/\//
 content=$(cat local-dev.yaml)
 VESSEL_TAG='local-dev'
 CLIENT_TAG='local-dev'
+HARVEST_TAG='local-dev'
 for key in $(compgen -v); do
   if [[ $key == "COMP_WORDBREAKS" || $key == "content" ]]; then
     continue;

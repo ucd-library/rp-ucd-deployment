@@ -13,13 +13,20 @@ services:
     image: {{FUSEKI_IMAGE_NAME}}:{{FUSEKI_TAG}}
     env_file:
       - .env
-    environment:
-      - ADMIN_PASSWORD=${FUSEKI_PASSWORD}
     volumes:
       - fuseki-data:/fuseki
-      - ./io:/staging
     ports:
       - ${FUSEKI_HOST_PORT:-8081}:3030
+
+  harvest:
+    image: {{HARVEST_IMAGE_NAME}}:{{HARVEST_TAG}}
+    env_file:
+      - .env
+    volumes:
+       - harvest-xslt-data:/usr/local/vivo/harvester/data
+       - harvest-data:/var/lib/harvest
+       - ../{{REPOSITORY_DIR}}/{{HARVEST_REPO_NAME}}:/usr/local/lib/harvest
+    command: tail -f /dev/null
 
   kafka:
     image: {{KAFKA_IMAGE_NAME}}:{{KAFKA_TAG}}
@@ -133,3 +140,5 @@ volumes:
   zookeeper-data:
   zookeeper-datalog:
   redis-data:
+  harvest-xslt-data:
+  harvest-data:

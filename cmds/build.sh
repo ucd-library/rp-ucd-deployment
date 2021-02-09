@@ -20,10 +20,22 @@ fi
 if [[ ! -z $LOCAL_BUILD ]]; then
   VESSEL_TAG='local-dev'
   CLIENT_TAG='local-dev'
+  HARVEST_TAG='local-dev'
 fi
 
 VESSEL_REPO_HASH=$(git -C $REPOSITORY_DIR/$VESSEL_REPO_NAME log -1 --pretty=%h)
 CLIENT_REPO_HASH=$(git -C $REPOSITORY_DIR/$CLIENT_REPO_NAME log -1 --pretty=%h)
+HARVEST_REPO_HASH=$(git -C $REPOSITORY_DIR/$HARVEST_REPO_NAME log -1 --pretty=%h)
+
+##
+# Harvest
+##
+
+docker build \
+  -t $HARVEST_IMAGE_NAME:$HARVEST_TAG \
+  --build-arg BUILDKIT_INLINE_CACHE=1 \
+  --cache-from=$HARVEST_IMAGE_NAME:$DOCKER_CACHE_TAG \
+  $REPOSITORY_DIR/$HARVEST_REPO_NAME
 
 ##
 # Vessel
