@@ -78,14 +78,24 @@ To get started with local development, do the following:
   - Checkout the branch you wish to work on, ex:
     - `git checkout dev`
     - `git checkout -b [my-new-feature]`
-  - In the same **parent** folder at you cloned `rp-ucd-deployment`, clone all git repositories for this deployment.  They are defined in `config.sh` in the `Repositories` section.  
+  - In the same **parent** folder at you cloned `rp-ucd-deployment`, clone all git repositories for this deployment.  They are defined in `config.sh` in the `Repositories` section.
   IMPORATANT: Make sure you checkout to the branches you wish to work on for each repository.
   - Setup the `./repositories` folder.  There is a helper script for this:
     - `./cmds/init-local-dev.sh`
   - Create the docker-compose.yaml file:
     - `./cmds/generate-deployment-files.sh`
     - Note: the local development folder (rp-local-dev) is ignored from git.  you can make changes at will, though these changes will be overwritten every time you run `generate-deployment-files.sh`.  To makes permanent changes you will need to update the `./templates/local-dev.yaml` file
-  - create your .env file [see below](#env-file)
+  - create your .env file [see below](#env-file).  Quick start sample:
+
+```
+PRIVATE_SERVER=false
+AUTH_PORTAL=/login.html
+
+FUSEKI_USERNAME=admin
+FUSEKI_PASSWORD=justinisgreat
+FUSEKI_DATABASE=material_science
+DEFAULT_ADMINS=jrmerz@ucdavis.edu quinn@ucdavis.edu
+```
 
 ## Local Development - Dev Cycle
 

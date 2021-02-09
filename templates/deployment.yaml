@@ -17,6 +17,7 @@ services:
       - ADMIN_PASSWORD=${FUSEKI_PASSWORD}
     volumes:
       - fuseki-data:/fuseki
+      - ./io:/staging
     ports: # still exposed for admin access
       - ${FUSEKI_HOST_PORT:-8081}:3030
 
