@@ -3,7 +3,7 @@ services:
 
   zookeeper:
     image: {{ZOOKEEPER_IMAGE_NAME}}:{{ZOOKEEPER_TAG}}
-    environment: 
+    environment:
       - ALLOW_ANONYMOUS_LOGIN=yes
     volumes:
       - zookeeper-data:/data
@@ -25,18 +25,21 @@ services:
     volumes:
        - harvest-xslt-data:/usr/local/vivo/harvester/data
        - harvest-data:/var/lib/harvest
-       - ../{{REPOSITORY_DIR}}/{{HARVEST_REPO_NAME}}:/usr/local/lib/harvest
+       - ../{{REPOSITORY_DIR}}/{{HARVEST_REPO_NAME}}/lib:/usr/local/lib/harvest
+       - ../{{REPOSITORY_DIR}}/{{HARVEST_REPO_NAME}}/ucdid:/usr/local/bin/ucdid
+       - ../{{REPOSITORY_DIR}}/{{HARVEST_REPO_NAME}}/cdl:/usr/local/bin/cdl
+       - ../{{REPOSITORY_DIR}}/{{HARVEST_REPO_NAME}}/harvest:/usr/local/bin/harvest
     command: tail -f /dev/null
 
   kafka:
     image: {{KAFKA_IMAGE_NAME}}:{{KAFKA_TAG}}
     env_file:
       - .env
-    environment: 
+    environment:
       - ALLOW_PLAINTEXT_LISTENER=yes
       - KAFKA_CFG_ZOOKEEPER_CONNECT=zookeeper:2181
       - KAFKA_CLIENT_USER=admin
-    volumes: 
+    volumes:
       - kafka-data:/bitnami/kafka
     depends_on:
       - "zookeeper"

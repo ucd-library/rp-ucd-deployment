@@ -18,11 +18,10 @@ if [ -d "./repositories" ]; then
 fi
 mkdir ./repositories
 
-cd ./repositories
 for repo in "${ALL_GIT_REPOSITORIES[@]}"; do
-  ln -s ../../$repo .
+  ln -s ../../$repo ./repositories/$repo
 done
 
-cd $REPOSITORY_DIR/$HARVEST_REPO_NAME
-git submodule update --init --recursive
-cd $ROOT_DIR/..
+(cd $REPOSITORY_DIR/$HARVEST_REPO_NAME
+ git submodule update --init --recursive
+)

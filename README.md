@@ -91,9 +91,7 @@ To get started with local development, do the following:
 PRIVATE_SERVER=false
 AUTH_PORTAL=/login.html
 
-FUSEKI_USERNAME=admin
 FUSEKI_PASSWORD=justinisgreat
-FUSEKI_DATABASE=material_science
 DEFAULT_ADMINS=jrmerz@ucdavis.edu quinn@ucdavis.edu
 ```
 
@@ -138,8 +136,12 @@ Here are the .env file parameters.
   - `JWT_EXPIRES_IN` Time in ms jwt expiration
   - `JWT_COOKIE_NAME` name of jwt cookie.  defaults to `rp-ucd-jwt`.
   - Fuseki. variables used to control fuseki.  Note some of these can be modified if you wish to attach to an external fuseki instance.
-    - Connection: `FUSEKI_USERNAME`, `FUSEKI_PASSWORD`, `FUSEKI_HOST`, `FUSEKI_PORT`, `FUSEKI_DATABASE`
-    - `FUSEKI_GRAPHS` space seperated list of graphs to use in the fuseki dataset when creating an es model
+    - Connection: `FUSEKI_USERNAME`, `FUSEKI_PASSWORD`, `FUSEKI_HOST`,
+      `FUSEKI_PORT`
+    - Operation:`FUSEKI_TIMEOUT_FIRST=10000`, specifies the time to wait (in ms) until
+      first results is returned, you can try upping this if you need to test a
+      long query. `FUSEKI_TIMEOUT_REST=60000` specifies the time to wait until
+      that last result is returned.   Up this if you have a really big query.
 
 There are additional config variables you an use see in the main [config.js](https://github.com/ucd-library/vessel/blob/master/node-utils/lib/config.js) file.  However it is not recommend to change them unless you know what you are doing.
 
