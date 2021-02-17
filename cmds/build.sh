@@ -66,6 +66,14 @@ docker build \
   --cache-from=$INDEXER_IMAGE_NAME:$DOCKER_CACHE_TAG \
   $REPOSITORY_DIR/$VESSEL_REPO_NAME/es-indexer
 
+# elastic search models
+docker build \
+  -t $MODEL_IMAGE_NAME:$VESSEL_TAG \
+  --build-arg BUILDKIT_INLINE_CACHE=1 \
+  --build-arg NODEJS_BASE=${NODEJS_BASE} \
+  --cache-from=$MODEL_IMAGE_NAME:$DOCKER_CACHE_TAG \
+  $REPOSITORY_DIR/$VESSEL_REPO_NAME/es-models
+
 # elastic search api
 docker build \
   -t $API_IMAGE_NAME:$VESSEL_TAG \

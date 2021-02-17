@@ -26,6 +26,7 @@ echo "$content" > ../docker-compose.yaml
 mkdir -p ../$GKE_CONFIG_DIR
 
 INDEXER_IMAGE_NAME_ESCAPED=$(echo $INDEXER_IMAGE_NAME | sed 's/\//\\\//g')
+MODEL_IMAGE_NAME_ESCAPED=$(echo $MODEL_IMAGE_NAME | sed 's/\//\\\//g')
 API_IMAGE_NAME_ESCAPED=$(echo $API_IMAGE_NAME | sed 's/\//\\\//g')
 GATEWAY_IMAGE_NAME_ESCAPED=$(echo $GATEWAY_IMAGE_NAME | sed 's/\//\\\//g')
 AUTH_IMAGE_NAME_ESCAPED=$(echo $AUTH_IMAGE_NAME | sed 's/\//\\\//g')
