@@ -25,7 +25,7 @@ APP_VERSION=v1.1.0-rc.${BUILD_NUM}
 # Branches can be used for development deployments
 VESSEL_TAG=main
 CLIENT_TAG=main
-HARVEST_TAG=dev
+HARVEST_TAG=1.0.0
 
 FUSEKI_TAG=1.2.1
 REDIS_TAG=6.0.5

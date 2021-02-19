@@ -19,7 +19,7 @@ services:
       - ${FUSEKI_HOST_PORT:-8081}:3030
 
   harvest:
-    image: ucdlib/rp-ucd-harvest:dev
+    image: ucdlib/rp-ucd-harvest:1.0.0
     env_file:
       - .env
     volumes:
