@@ -4,9 +4,17 @@
 # Setup your application deployment here
 ########################################
 
+# Grab build number is mounted in CI system
+if [[ -f /config/.buildenv ]]; then
+  source /config/.buildenv
+else
+  BUILD_NUM=-1
+fi
+
+
 # Main version number we are tagging the app with. Always update
 # this when you cut a new version of the app!
-APP_VERSION=1.0.0-rc
+APP_VERSION=v1.1.0-rc.${BUILD_NUM}
 
 ##
 # TAGS
@@ -15,10 +23,11 @@ APP_VERSION=1.0.0-rc
 # Repository tags/branchs
 # Tags should always be used for production deployments
 # Branches can be used for development deployments
-VESSEL_TAG=1.0.0
-CLIENT_TAG=1.0.0
+VESSEL_TAG=main
+CLIENT_TAG=main
+HARVEST_TAG=1.0.0
 
-FUSEKI_TAG=1.0.0
+FUSEKI_TAG=1.2.1
 REDIS_TAG=6.0.5
 ZOOKEEPER_TAG=3.6
 KAFKA_TAG=2.5.0
@@ -38,6 +47,10 @@ VESSEL_REPO_URL=$GITHUB_ORG_URL/$VESSEL_REPO_NAME
 CLIENT_REPO_NAME=rp-ucd-client
 CLIENT_REPO_URL=$GITHUB_ORG_URL/$CLIENT_REPO_NAME
 
+# Harvest
+HARVEST_REPO_NAME=rp-ucd-harvest
+HARVEST_REPO_URL=$GITHUB_ORG_URL/$HARVEST_REPO_NAME
+
 ##
 # Docker
 ##
@@ -48,10 +61,12 @@ DOCKER_CACHE_TAG="latest"
 
 # Docker Images
 FUSEKI_IMAGE_NAME=$UCD_LIB_DOCKER_ORG/rp-ucd-fuseki
+HARVEST_IMAGE_NAME=$UCD_LIB_DOCKER_ORG/$HARVEST_REPO_NAME
 CLIENT_IMAGE_NAME=$UCD_LIB_DOCKER_ORG/rp-ucd-client
 NODE_UTILS_IMAGE_NAME=$UCD_LIB_DOCKER_ORG/rp-ucd-node-utils
 DEBOUNCER_IMAGE_NAME=$UCD_LIB_DOCKER_ORG/rp-ucd-kafka-debouncer
 INDEXER_IMAGE_NAME=$UCD_LIB_DOCKER_ORG/rp-ucd-es-indexer
+MODEL_IMAGE_NAME=$UCD_LIB_DOCKER_ORG/rp-ucd-es-models
 API_IMAGE_NAME=$UCD_LIB_DOCKER_ORG/rp-ucd-api
 GATEWAY_IMAGE_NAME=$UCD_LIB_DOCKER_ORG/rp-ucd-gateway
 AUTH_IMAGE_NAME=$UCD_LIB_DOCKER_ORG/rp-ucd-auth-cas
@@ -63,7 +78,7 @@ ELASTIC_SEARCH_IMAGE_NAME=docker.elastic.co/elasticsearch/elasticsearch
 
 ALL_DOCKER_BUILD_IMAGES=( $CLIENT_IMAGE_NAME $DEBOUNCER_IMAGE_NAME \
  $INDEXER_IMAGE_NAME $API_IMAGE_NAME $GATEWAY_IMAGE_NAME $NODE_UTILS_IMAGE_NAME \
- $AUTH_IMAGE_NAME )
+ $AUTH_IMAGE_NAME $HARVEST_IMAGE_NAME $MODEL_IMAGE_NAME )
 
 ##
 # Google Kubernetes Engine (GKE)
@@ -93,7 +108,7 @@ ALL_DOCKER_BUILD_IMAGES=( $CLIENT_IMAGE_NAME $DEBOUNCER_IMAGE_NAME \
 # Git
 ##
 
-ALL_GIT_REPOSITORIES=( $VESSEL_REPO_NAME $CLIENT_REPO_NAME )
+ALL_GIT_REPOSITORIES=( $VESSEL_REPO_NAME $CLIENT_REPO_NAME $HARVEST_REPO_NAME )
 
 # Git
 GIT=git

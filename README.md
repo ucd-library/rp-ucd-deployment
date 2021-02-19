@@ -78,14 +78,22 @@ To get started with local development, do the following:
   - Checkout the branch you wish to work on, ex:
     - `git checkout dev`
     - `git checkout -b [my-new-feature]`
-  - In the same **parent** folder at you cloned `rp-ucd-deployment`, clone all git repositories for this deployment.  They are defined in `config.sh` in the `Repositories` section.  
+  - In the same **parent** folder at you cloned `rp-ucd-deployment`, clone all git repositories for this deployment.  They are defined in `config.sh` in the `Repositories` section.
   IMPORATANT: Make sure you checkout to the branches you wish to work on for each repository.
   - Setup the `./repositories` folder.  There is a helper script for this:
     - `./cmds/init-local-dev.sh`
   - Create the docker-compose.yaml file:
     - `./cmds/generate-deployment-files.sh`
     - Note: the local development folder (rp-local-dev) is ignored from git.  you can make changes at will, though these changes will be overwritten every time you run `generate-deployment-files.sh`.  To makes permanent changes you will need to update the `./templates/local-dev.yaml` file
-  - create your .env file [see below](#env-file)
+  - create your .env file [see below](#env-file).  Quick start sample:
+
+```
+PRIVATE_SERVER=false
+AUTH_PORTAL=/login.html
+
+FUSEKI_PASSWORD=justinisgreat
+DEFAULT_ADMINS=jrmerz@ucdavis.edu quinn@ucdavis.edu
+```
 
 ## Local Development - Dev Cycle
 
@@ -128,8 +136,12 @@ Here are the .env file parameters.
   - `JWT_EXPIRES_IN` Time in ms jwt expiration
   - `JWT_COOKIE_NAME` name of jwt cookie.  defaults to `rp-ucd-jwt`.
   - Fuseki. variables used to control fuseki.  Note some of these can be modified if you wish to attach to an external fuseki instance.
-    - Connection: `FUSEKI_USERNAME`, `FUSEKI_PASSWORD`, `FUSEKI_HOST`, `FUSEKI_PORT`, `FUSEKI_DATABASE`
-    - `FUSEKI_GRAPHS` space seperated list of graphs to use in the fuseki dataset when creating an es model
+    - Connection: `FUSEKI_USERNAME`, `FUSEKI_PASSWORD`, `FUSEKI_HOST`,
+      `FUSEKI_PORT`
+    - Operation:`FUSEKI_TIMEOUT_FIRST=10000`, specifies the time to wait (in ms) until
+      first results is returned, you can try upping this if you need to test a
+      long query. `FUSEKI_TIMEOUT_REST=60000` specifies the time to wait until
+      that last result is returned.   Up this if you have a really big query.
 
 There are additional config variables you an use see in the main [config.js](https://github.com/ucd-library/vessel/blob/master/node-utils/lib/config.js) file.  However it is not recommend to change them unless you know what you are doing.
 
@@ -195,4 +207,8 @@ docker-compose exec redis redis-cli set role-jrmerz@ucdavis.edu-admin true
 
 ## Add Sample Data
 
+This is the way
+https://gitlab.dams.library.ucdavis.edu/experts/experts-data/tree/experts-dev#experts-data
+
+Old Way
 https://github.com/ucd-library/research-profiles/tree/master/examples/material_science

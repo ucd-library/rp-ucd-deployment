@@ -26,6 +26,7 @@ echo "$content" > ../docker-compose.yaml
 mkdir -p ../$GKE_CONFIG_DIR
 
 INDEXER_IMAGE_NAME_ESCAPED=$(echo $INDEXER_IMAGE_NAME | sed 's/\//\\\//g')
+MODEL_IMAGE_NAME_ESCAPED=$(echo $MODEL_IMAGE_NAME | sed 's/\//\\\//g')
 API_IMAGE_NAME_ESCAPED=$(echo $API_IMAGE_NAME | sed 's/\//\\\//g')
 GATEWAY_IMAGE_NAME_ESCAPED=$(echo $GATEWAY_IMAGE_NAME | sed 's/\//\\\//g')
 AUTH_IMAGE_NAME_ESCAPED=$(echo $AUTH_IMAGE_NAME | sed 's/\//\\\//g')
@@ -39,6 +40,7 @@ ELASTIC_SEARCH_IMAGE_NAME_ESCAPED=$(echo $ELASTIC_SEARCH_IMAGE_NAME | sed 's/\//
 content=$(cat local-dev.yaml)
 VESSEL_TAG='local-dev'
 CLIENT_TAG='local-dev'
+HARVEST_TAG='local-dev'
 for key in $(compgen -v); do
   if [[ $key == "COMP_WORDBREAKS" || $key == "content" ]]; then
     continue;

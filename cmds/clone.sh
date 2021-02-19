@@ -27,3 +27,12 @@ $GIT_CLONE $VESSEL_REPO_URL.git \
   --branch $VESSEL_TAG \
   --depth 1 \
   $REPOSITORY_DIR/$VESSEL_REPO_NAME
+
+# Harvest
+$GIT_CLONE $HARVEST_REPO_URL.git \
+  --branch $HARVEST_TAG \
+  --depth 1 \
+  $REPOSITORY_DIR/$HARVEST_REPO_NAME
+cd $REPOSITORY_DIR/$HARVEST_REPO_NAME
+git submodule update --init --recursive
+cd $ROOT_DIR/..

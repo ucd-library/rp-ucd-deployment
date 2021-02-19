@@ -20,10 +20,22 @@ fi
 if [[ ! -z $LOCAL_BUILD ]]; then
   VESSEL_TAG='local-dev'
   CLIENT_TAG='local-dev'
+  HARVEST_TAG='local-dev'
 fi
 
 VESSEL_REPO_HASH=$(git -C $REPOSITORY_DIR/$VESSEL_REPO_NAME log -1 --pretty=%h)
 CLIENT_REPO_HASH=$(git -C $REPOSITORY_DIR/$CLIENT_REPO_NAME log -1 --pretty=%h)
+HARVEST_REPO_HASH=$(git -C $REPOSITORY_DIR/$HARVEST_REPO_NAME log -1 --pretty=%h)
+
+##
+# Harvest
+##
+
+docker build \
+  -t $HARVEST_IMAGE_NAME:$HARVEST_TAG \
+  --build-arg BUILDKIT_INLINE_CACHE=1 \
+  --cache-from=$HARVEST_IMAGE_NAME:$DOCKER_CACHE_TAG \
+  $REPOSITORY_DIR/$HARVEST_REPO_NAME
 
 ##
 # Vessel
@@ -53,6 +65,14 @@ docker build \
   --build-arg NODEJS_BASE=${NODEJS_BASE} \
   --cache-from=$INDEXER_IMAGE_NAME:$DOCKER_CACHE_TAG \
   $REPOSITORY_DIR/$VESSEL_REPO_NAME/es-indexer
+
+# elastic search models
+docker build \
+  -t $MODEL_IMAGE_NAME:$VESSEL_TAG \
+  --build-arg BUILDKIT_INLINE_CACHE=1 \
+  --build-arg NODEJS_BASE=${NODEJS_BASE} \
+  --cache-from=$MODEL_IMAGE_NAME:$DOCKER_CACHE_TAG \
+  $REPOSITORY_DIR/$VESSEL_REPO_NAME/es-models
 
 # elastic search api
 docker build \
@@ -86,5 +106,10 @@ docker build \
   -t $CLIENT_IMAGE_NAME:$CLIENT_TAG \
   --build-arg BUILDKIT_INLINE_CACHE=1 \
   --build-arg NODEJS_BASE=${NODEJS_BASE} \
+  --build-arg CLIENT_TAG=${CLIENT_TAG} \
+  --build-arg VESSEL_TAG=${VESSEL_TAG} \
+  --build-arg BUILD_NUM=${BUILD_NUM} \
+  --build-arg BUILD_TIME=${BUILD_TIME} \
+  --build-arg APP_VERSION=${APP_VERSION} \
   --cache-from=$CLIENT_IMAGE_NAME:$DOCKER_CACHE_TAG \
   $REPOSITORY_DIR/$CLIENT_REPO_NAME
