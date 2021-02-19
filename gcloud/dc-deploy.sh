@@ -6,7 +6,7 @@ CLUSTER_NAME="rp-${BRANCH_NAME}"
 
 if [[ ! -d "/opt/${CLUSTER_NAME}" ]]; then
   echo "Docker compose cluster /opt/${CLUSTER_NAME} is does not exist, skipping deployment"
-  exit 0
+  exit 1
 fi
 
 echo "USER:$USER";
