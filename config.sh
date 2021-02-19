@@ -23,8 +23,8 @@ APP_VERSION=v1.1.0-beta.${BUILD_NUM}
 # Repository tags/branchs
 # Tags should always be used for production deployments
 # Branches can be used for development deployments
-VESSEL_TAG=sandbox
-CLIENT_TAG=sandbox
+VESSEL_TAG=dev
+CLIENT_TAG=dev
 HARVEST_TAG=dev
 
 FUSEKI_TAG=1.2.1
