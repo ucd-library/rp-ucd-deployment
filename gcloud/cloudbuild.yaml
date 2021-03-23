@@ -35,7 +35,6 @@ steps:
       - 'BRANCH_NAME=$BRANCH_NAME'
       - 'SHORT_SHA=$SHORT_SHA'
       - 'TAG_NAME=$TAG_NAME'
-      - '_UCD_LIB_SOURCE=$_UCD_LIB_SOURCE'
 
   - name: gcr.io/cloud-builders/docker
     entrypoint: "sh"
@@ -77,5 +76,6 @@ steps:
 substitutions:
   _CONFIG_BUCKET: ci-build-config
   _CONFIG_PROJECT: researcher-profiles
+  _UCD_LIB_INITIATOR: unknown
 
 timeout: 1800s
