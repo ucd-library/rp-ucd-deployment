@@ -1,25 +1,36 @@
 steps:
 
   - name: 'gcr.io/cloud-builders/gsutil'
-    # id: copy_config
-    # waitFor: ['-']
     args: ['rsync', 'gs://${_CONFIG_BUCKET}/${_CONFIG_PROJECT}', '/config']
     volumes:
     - name: 'config'
       path: '/config'
 
   - name: 'gcr.io/$PROJECT_ID/ci-buildnum'
-    # id: setup_env
-    args: ['/config/buildnum', '/config/.buildenv']
-    # waitFor: ['copy_config']
+    args: ['/config/buildnum', '/config/.buildenv', '/config/$BUILD_ID.json']
+    volumes:
+    - name: 'config'
+      path: '/config'
+
+  - name: 'gcr.io/$PROJECT_ID/ci-build-deployment-logger'
+    args: ['/config']
+    env: 
+    - 'REPO_NAME=$REPO_NAME'
+    - 'BRANCH_NAME=$BRANCH_NAME'
+    - '_UCD_LIB_INITIATOR=$_UCD_LIB_INITIATOR'
+    - 'BUILD_ID=$BUILD_ID'
     volumes:
     - name: 'config'
       path: '/config'
 
   - name: 'gcr.io/cloud-builders/gsutil'
-    # id: save_config
     args: ['cp', '/config/buildnum', 'gs://${_CONFIG_BUCKET}/${_CONFIG_PROJECT}/buildnum']
-    # waitFor: ['setup_env']
+    volumes:
+    - name: 'config'
+      path: '/config'
+
+  - name: 'gcr.io/cloud-builders/gsutil'
+    args: ['cp', '-r', '/config/${BUILD_ID}', 'gs://${_CONFIG_BUCKET}/${_CONFIG_PROJECT}/${BUILD_ID}']
     volumes:
     - name: 'config'
       path: '/config'
@@ -35,7 +46,6 @@ steps:
       - 'BRANCH_NAME=$BRANCH_NAME'
       - 'SHORT_SHA=$SHORT_SHA'
       - 'TAG_NAME=$TAG_NAME'
-      - '_UCD_LIB_INITIATOR=$_UCD_LIB_INITIATOR'
 
   - name: gcr.io/cloud-builders/docker
     entrypoint: "sh"
@@ -51,7 +61,7 @@ steps:
 
   - name: gcr.io/cloud-builders/docker
     entrypoint: "bash"
-    args: ["-c", "./cmds/build.sh"]
+    args: ["-c", "./cmds/build.sh;"]
     env: 
       - 'CLOUD_BUILD=true'
     volumes:

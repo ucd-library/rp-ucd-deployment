@@ -32,7 +32,7 @@ HARVEST_REPO_HASH=$(git -C $REPOSITORY_DIR/$HARVEST_REPO_NAME log -1 --pretty=%h
 ##
 
 docker build \
-  -t $HARVEST_IMAGE_NAME:$HARVEST_TAG \
+  -t $HARVEST_IMAGE_NAME_TAG \
   --build-arg BUILDKIT_INLINE_CACHE=1 \
   --cache-from=$HARVEST_IMAGE_NAME:$DOCKER_CACHE_TAG \
   $REPOSITORY_DIR/$HARVEST_REPO_NAME
@@ -41,7 +41,7 @@ docker build \
 # Vessel
 ##
 
-NODEJS_BASE=$NODE_UTILS_IMAGE_NAME:$VESSEL_TAG
+NODEJS_BASE=$NODE_UTILS_IMAGE_NAME_TAG
 
 # nodejs baselayer
 docker build \
@@ -52,7 +52,7 @@ docker build \
 
 # kafka rdf-patch debouncer
 docker build \
-  -t $DEBOUNCER_IMAGE_NAME:$VESSEL_TAG \
+  -t $DEBOUNCER_IMAGE_NAME_TAG \
   --build-arg BUILDKIT_INLINE_CACHE=1 \
   --build-arg NODEJS_BASE=${NODEJS_BASE} \
   --cache-from=$DEBOUNCER_IMAGE_NAME:$DOCKER_CACHE_TAG \
@@ -60,7 +60,7 @@ docker build \
 
 # elastic search indexer
 docker build \
-  -t $INDEXER_IMAGE_NAME:$VESSEL_TAG \
+  -t $INDEXER_IMAGE_NAME_TAG \
   --build-arg BUILDKIT_INLINE_CACHE=1 \
   --build-arg NODEJS_BASE=${NODEJS_BASE} \
   --cache-from=$INDEXER_IMAGE_NAME:$DOCKER_CACHE_TAG \
@@ -68,7 +68,7 @@ docker build \
 
 # elastic search models
 docker build \
-  -t $MODEL_IMAGE_NAME:$VESSEL_TAG \
+  -t $MODEL_IMAGE_NAME_TAG \
   --build-arg BUILDKIT_INLINE_CACHE=1 \
   --build-arg NODEJS_BASE=${NODEJS_BASE} \
   --cache-from=$MODEL_IMAGE_NAME:$DOCKER_CACHE_TAG \
@@ -76,7 +76,7 @@ docker build \
 
 # elastic search api
 docker build \
-  -t $API_IMAGE_NAME:$VESSEL_TAG \
+  -t $API_IMAGE_NAME_TAG \
   --build-arg BUILDKIT_INLINE_CACHE=1 \
   --build-arg NODEJS_BASE=${NODEJS_BASE} \
   --cache-from=$API_IMAGE_NAME:$DOCKER_CACHE_TAG \
@@ -84,7 +84,7 @@ docker build \
 
 # auth
 docker build \
-  -t $AUTH_IMAGE_NAME:$VESSEL_TAG \
+  -t $AUTH_IMAGE_NAME_TAG \
   --build-arg BUILDKIT_INLINE_CACHE=1 \
   --build-arg NODEJS_BASE=${NODEJS_BASE} \
   --cache-from=$AUTH_IMAGE_NAME:$DOCKER_CACHE_TAG \
@@ -92,7 +92,7 @@ docker build \
 
 # gateway
 docker build \
-  -t $GATEWAY_IMAGE_NAME:$VESSEL_TAG \
+  -t $GATEWAY_IMAGE_NAME_TAG \
   --build-arg BUILDKIT_INLINE_CACHE=1 \
   --build-arg NODEJS_BASE=${NODEJS_BASE} \
   --cache-from=$GATEWAY_IMAGE_NAME:$DOCKER_CACHE_TAG \
@@ -103,7 +103,7 @@ docker build \
 ##
 
 docker build \
-  -t $CLIENT_IMAGE_NAME:$CLIENT_TAG \
+  -t $CLIENT_IMAGE_NAME_TAG \
   --build-arg BUILDKIT_INLINE_CACHE=1 \
   --build-arg NODEJS_BASE=${NODEJS_BASE} \
   --build-arg CLIENT_TAG=${CLIENT_TAG} \
