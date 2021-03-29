@@ -27,6 +27,14 @@ VESSEL_TAG=sandbox
 CLIENT_TAG=sandbox
 HARVEST_TAG=dev
 
+# set local-dev tags used by 
+# local development docker-compose file
+if [[ ! -z $LOCAL_BUILD ]]; then
+  VESSEL_TAG='local-dev'
+  CLIENT_TAG='local-dev'
+  HARVEST_TAG='local-dev'
+fi
+
 FUSEKI_TAG=1.2.1
 REDIS_TAG=6.0.5
 ZOOKEEPER_TAG=3.6

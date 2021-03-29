@@ -15,14 +15,6 @@ if [[ -z $CLOUD_BUILD ]]; then
   export DOCKER_BUILDKIT=1
 fi
 
-# Additionally set local-dev tags used by 
-# local development docker-compose file
-if [[ ! -z $LOCAL_BUILD ]]; then
-  VESSEL_TAG='local-dev'
-  CLIENT_TAG='local-dev'
-  HARVEST_TAG='local-dev'
-fi
-
 VESSEL_REPO_HASH=$(git -C $REPOSITORY_DIR/$VESSEL_REPO_NAME log -1 --pretty=%h)
 CLIENT_REPO_HASH=$(git -C $REPOSITORY_DIR/$CLIENT_REPO_NAME log -1 --pretty=%h)
 HARVEST_REPO_HASH=$(git -C $REPOSITORY_DIR/$HARVEST_REPO_NAME log -1 --pretty=%h)
