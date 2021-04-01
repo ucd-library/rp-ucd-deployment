@@ -93,5 +93,10 @@ substitutions:
   _CONFIG_BUCKET: ci-build-config
   _CONFIG_PROJECT: researcher-profiles
   _UCD_LIB_INITIATOR: unknown
+  _GITHUB_EVENT: ''
+  _GITHUB_ISSUE_NUMBER: ''
+  _GITHUB_REPOSITORY: ''
+  _GITHUB_PR_USER: ''
+  _GITHUB_PR_MERGED_BY: ''
 
 timeout: 1800s
