@@ -35,7 +35,7 @@ if [[ ! -z $LOCAL_BUILD ]]; then
   HARVEST_TAG='local-dev'
 fi
 
-FUSEKI_TAG=1.2.1
+FUSEKI_TAG=1.3.2
 REDIS_TAG=6.0.5
 ZOOKEEPER_TAG=3.6
 KAFKA_TAG=2.5.0
