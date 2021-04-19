@@ -14,7 +14,7 @@ fi
 
 # Main version number we are tagging the app with. Always update
 # this when you cut a new version of the app!
-APP_VERSION=v1.2.0-beta.${BUILD_NUM}
+APP_VERSION=v1.2.0-rc.${BUILD_NUM}
 
 ##
 # TAGS
@@ -23,8 +23,8 @@ APP_VERSION=v1.2.0-beta.${BUILD_NUM}
 # Repository tags/branchs
 # Tags should always be used for production deployments
 # Branches can be used for development deployments
-VESSEL_TAG=sandbox
-CLIENT_TAG=sandbox
+VESSEL_TAG=dev
+CLIENT_TAG=dev
 HARVEST_TAG=dev
 
 # set local-dev tags used by 
