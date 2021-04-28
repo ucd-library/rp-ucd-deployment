@@ -14,7 +14,7 @@ fi
 
 # Main version number we are tagging the app with. Always update
 # this when you cut a new version of the app!
-APP_VERSION=v1.1.1-rc.${BUILD_NUM}
+APP_VERSION=v1.2.0-rc.${BUILD_NUM}
 
 ##
 # TAGS
