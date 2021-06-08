@@ -103,6 +103,8 @@ services:
     image: gcr.io/ucdlib-pubreg/rp-ucd-es-models:sandbox
     env_file:
       - .env
+    ports:
+      - ${MODELS_HOST_PORT:-8084}:3000
     restart: on-failure
 
 volumes:
