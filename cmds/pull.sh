@@ -12,7 +12,7 @@ cd $ROOT_DIR/..
 source config.sh
 
 for image in "${ALL_DOCKER_BUILD_IMAGES[@]}"; do
-  docker pull $image:$DOCKER_CACHE_TAG || true
+  docker pull $image:$CONTAINER_CACHE_TAG || true
 done
 
 docker pull docker.io/library/maven:3-jdk-8-slim
