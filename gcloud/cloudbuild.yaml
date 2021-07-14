@@ -1,35 +1,48 @@
 steps:
 
   - name: 'gcr.io/cloud-builders/gsutil'
-    # id: copy_config
-    # waitFor: ['-']
     args: ['rsync', 'gs://${_CONFIG_BUCKET}/${_CONFIG_PROJECT}', '/config']
     volumes:
     - name: 'config'
       path: '/config'
 
   - name: 'gcr.io/$PROJECT_ID/ci-buildnum'
-    # id: setup_env
-    args: ['/config/buildnum', '/config/.buildenv']
-    # waitFor: ['copy_config']
+    args: ['/config/buildnum', '/config/.buildenv', '/config/$BUILD_ID.json']
+    volumes:
+    - name: 'config'
+      path: '/config'
+
+  - name: 'gcr.io/$PROJECT_ID/ci-build-deployment-logger'
+    args: ['/config']
+    env: 
+    - 'REPO_NAME=$REPO_NAME'
+    - 'BRANCH_NAME=$BRANCH_NAME'
+    - '_UCD_LIB_INITIATOR=$_UCD_LIB_INITIATOR'
+    - '_GITHUB_EVENT=$_GITHUB_EVENT'
+    - '_GITHUB_ISSUE_NUMBER=$_GITHUB_ISSUE_NUMBER'
+    - '_GITHUB_REPOSITORY=$_GITHUB_REPOSITORY'
+    - '_GITHUB_PR_USER=$_GITHUB_PR_USER'
+    - '_GITHUB_PR_MERGED_BY=$_GITHUB_PR_MERGED_BY'
+    - 'BUILD_ID=$BUILD_ID'
     volumes:
     - name: 'config'
       path: '/config'
 
   - name: 'gcr.io/cloud-builders/gsutil'
-    # id: save_config
     args: ['cp', '/config/buildnum', 'gs://${_CONFIG_BUCKET}/${_CONFIG_PROJECT}/buildnum']
-    # waitFor: ['setup_env']
     volumes:
     - name: 'config'
       path: '/config'
 
-  - name: gcr.io/cloud-builders/gcloud
-    entrypoint: 'bash'
-    args: [ '-c', 'gcloud secrets versions access latest --secret=libosdev-dockerhub-secret > pass.txt' ]
-    # this is a hack to get the BRANCH_NAME and SHORT_SHA in the build metadata even when
-    # submitted from via ./gcloud/push.sh.  All --substitutions variables have to exist in the
-    # yaml file.  Even when you are substiting special variables like BRANCH_NAME and SHORT_SHA (lame).
+  - name: 'gcr.io/cloud-builders/gsutil'
+    args: ['cp', '-r', '/config/${BUILD_ID}', 'gs://${_CONFIG_BUCKET}/${_CONFIG_PROJECT}/${BUILD_ID}']
+    volumes:
+    - name: 'config'
+      path: '/config'
+
+  - name: gcr.io/cloud-builders/git
+    entrypoint: "bash"
+    args: ["-c", "./cmds/clone.sh"]
     env: 
       - 'REPO_NAME=$REPO_NAME'
       - 'BRANCH_NAME=$BRANCH_NAME'
@@ -37,20 +50,12 @@ steps:
       - 'TAG_NAME=$TAG_NAME'
 
   - name: gcr.io/cloud-builders/docker
-    entrypoint: "sh"
-    args: ["-c", "docker login --username=libosdev --password-stdin < pass.txt"]
-
-  - name: gcr.io/cloud-builders/git
-    entrypoint: "bash"
-    args: ["-c", "./cmds/clone.sh"]
-
-  - name: gcr.io/cloud-builders/docker
     entrypoint: "bash"
     args: ["-c", "./cmds/pull.sh"]
 
   - name: gcr.io/cloud-builders/docker
     entrypoint: "bash"
-    args: ["-c", "./cmds/build.sh"]
+    args: ["-c", "./cmds/build.sh;"]
     env: 
       - 'CLOUD_BUILD=true'
     volumes:
@@ -66,7 +71,7 @@ steps:
 
   - name: gcr.io/cloud-builders/gcloud
     entrypoint: 'bash'
-    args: [ '-c', 'gcloud compute ssh $${CLUSTER_VM} --zone="$${CLUSTER_ZONE}" -- "BRANCH_NAME="$BRANCH_NAME" /opt/$$CLUSTER_NAME/gcloud/dc-deploy.sh"' ]
+    args: [ '-c', 'if [ $BRANCH_NAME == "sandbox" ]; then gcloud compute ssh $${CLUSTER_VM} --zone="$${CLUSTER_ZONE}" -- "BRANCH_NAME="$BRANCH_NAME" /opt/$$CLUSTER_NAME/gcloud/dc-deploy.sh" ; fi' ]
     env: 
       - 'BRANCH_NAME=$BRANCH_NAME'
       - 'CLUSTER_NAME=rp-$BRANCH_NAME'
@@ -76,5 +81,11 @@ steps:
 substitutions:
   _CONFIG_BUCKET: ci-build-config
   _CONFIG_PROJECT: researcher-profiles
+  _UCD_LIB_INITIATOR: unknown
+  _GITHUB_EVENT: ''
+  _GITHUB_ISSUE_NUMBER: ''
+  _GITHUB_REPOSITORY: ''
+  _GITHUB_PR_USER: ''
+  _GITHUB_PR_MERGED_BY: ''
 
 timeout: 1800s
