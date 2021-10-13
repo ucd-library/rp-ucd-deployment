@@ -66,6 +66,9 @@ HARVEST_REPO_URL=$GITHUB_ORG_URL/$HARVEST_REPO_NAME
 # Container Registery
 CONTAINER_REG_ORG=gcr.io/ucdlib-pubreg
 CONTAINER_CACHE_TAG="latest"
+if [[ ! -z $LOCAL_BUILD ]]; then
+  CONTAINER_CACHE_TAG='local-dev'
+fi
 
 # Container Images
 FUSEKI_IMAGE_NAME=$CONTAINER_REG_ORG/rp-ucd-fuseki
