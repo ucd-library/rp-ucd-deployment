@@ -1,0 +1,37 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: fuseki
+spec:
+  selector:
+    matchLabels:
+      app: fuseki
+  serviceName: "fuseki"
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: fuseki
+    spec:
+      terminationGracePeriodSeconds: 10
+      containers:
+      - name: fuseki
+        image: {{FUSEKI_IMAGE_NAME}}:{{FUSEKI_TAG}}
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 3030
+        volumeMounts:
+        - name: fuseki-data-persistent-storage
+          mountPath: /fuseki
+        resources:
+          requests:
+            memory: "256Mi"
+            cpu: "500m"
+  volumeClaimTemplates:
+  - metadata:
+      name: fuseki-data-persistent-storage
+    spec:
+      accessModes: [ "ReadWriteOnce" ]
+      resources:
+        requests:
+          storage: 20 Gi
