@@ -41,6 +41,7 @@ services:
       - ALLOW_PLAINTEXT_LISTENER=yes
       - KAFKA_CFG_ZOOKEEPER_CONNECT=zookeeper:2181
       - KAFKA_CLIENT_USER=admin
+      - KAFKA_CFG_MAX_REQUEST_SIZE=10485760
     volumes:
       - kafka-data:/bitnami/kafka
     depends_on:
