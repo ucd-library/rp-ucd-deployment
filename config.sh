@@ -25,7 +25,7 @@ APP_VERSION=v1.4.0-alpha.${BUILD_NUM}
 # Branches can be used for development deployments
 VESSEL_TAG=sandbox
 CLIENT_TAG=rebrand
-HARVEST_TAG=dev
+HARVEST_TAG=main
 
 # set local-dev tags used by
 # local development docker-compose file
