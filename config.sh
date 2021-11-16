@@ -24,7 +24,7 @@ APP_VERSION=v1.4.0-alpha.${BUILD_NUM}
 # Tags should always be used for production deployments
 # Branches can be used for development deployments
 VESSEL_TAG=sandbox
-CLIENT_TAG=sandbox
+CLIENT_TAG=rebrand
 HARVEST_TAG=dev
 
 # set local-dev tags used by

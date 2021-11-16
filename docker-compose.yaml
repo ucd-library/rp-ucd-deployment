@@ -58,7 +58,7 @@ services:
       - es-data:/usr/share/elasticsearch/data
 
   client:
-    image: gcr.io/ucdlib-pubreg/rp-ucd-client:sandbox
+    image: gcr.io/ucdlib-pubreg/rp-ucd-client:rebrand
     env_file:
       - .env
     restart: on-failure
