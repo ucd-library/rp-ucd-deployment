@@ -42,6 +42,14 @@ docker build \
   --cache-from=$NODE_UTILS_IMAGE_NAME:$CONTAINER_CACHE_TAG \
   $REPOSITORY_DIR/$VESSEL_REPO_NAME/node-utils
 
+# kafka init
+docker build \
+  -t $KAFKA_INIT_IMAGE_NAME_TAG \
+  --build-arg BUILDKIT_INLINE_CACHE=1 \
+  --build-arg KAFKA_IMAGE=${KAFKA_IMAGE_NAME}:${KAFKA_TAG} \
+  --cache-from=$KAFKA_INIT_IMAGE_NAME:$CONTAINER_CACHE_TAG \
+  $REPOSITORY_DIR/$VESSEL_REPO_NAME/kafka-init
+
 # kafka rdf-patch debouncer
 docker build \
   -t $DEBOUNCER_IMAGE_NAME_TAG \
@@ -57,6 +65,14 @@ docker build \
   --build-arg NODEJS_BASE=${NODEJS_BASE} \
   --cache-from=$INDEXER_IMAGE_NAME:$CONTAINER_CACHE_TAG \
   $REPOSITORY_DIR/$VESSEL_REPO_NAME/es-indexer
+
+# indexer status
+docker build \
+  -t $STATUS_IMAGE_NAME_TAG \
+  --build-arg BUILDKIT_INLINE_CACHE=1 \
+  --build-arg NODEJS_BASE=${NODEJS_BASE} \
+  --cache-from=$STATUS_IMAGE_NAME:$CONTAINER_CACHE_TAG \
+  $REPOSITORY_DIR/$VESSEL_REPO_NAME/status
 
 # elastic search models
 docker build \
