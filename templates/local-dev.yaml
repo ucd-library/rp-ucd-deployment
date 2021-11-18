@@ -29,6 +29,8 @@ services:
        - ../{{REPOSITORY_DIR}}/{{HARVEST_REPO_NAME}}/ucdid:/usr/local/bin/ucdid
        - ../{{REPOSITORY_DIR}}/{{HARVEST_REPO_NAME}}/cdl:/usr/local/bin/cdl
        - ../{{REPOSITORY_DIR}}/{{HARVEST_REPO_NAME}}/harvest:/usr/local/bin/harvest
+       - ../{{REPOSITORY_DIR}}/{{HARVEST_REPO_NAME}}/lib/node/lib:/service/lib
+       - ../{{REPOSITORY_DIR}}/{{HARVEST_REPO_NAME}}/lib/node/index.js:/service/index.js
     command: tail -f /dev/null
 
   kafka:
@@ -39,6 +41,7 @@ services:
       - ALLOW_PLAINTEXT_LISTENER=yes
       - KAFKA_CFG_ZOOKEEPER_CONNECT=zookeeper:2181
       - KAFKA_CLIENT_USER=admin
+      - KAFKA_CFG_MAX_REQUEST_SIZE=10485760
     volumes:
       - kafka-data:/bitnami/kafka
     depends_on:

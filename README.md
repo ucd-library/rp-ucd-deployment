@@ -186,8 +186,11 @@ By default the server will bind to localhost:8080, however the port can be modif
       - Used to create a new elastic search index when the elastic search schema has changed.  This will reindex into a new es index.  When complete the es alias will be set to the new index and all old indexes will be deleted.
     - /admin/getCurrentIndexes
       - Returns the current list of es indexes with details.
-    - /model/:type:uri
+  - http://localhost:8084
+    - Access the model service
+    - /:type/:uri
       - This is the same endpoint that is accessible via the public gateway at /reindexer/model/:type:uri.  Note, this is the only indexer endpoint that is publicly accessible.
+
 
 ## Custom Models
 

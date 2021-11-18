@@ -34,6 +34,7 @@ services:
       - ALLOW_PLAINTEXT_LISTENER=yes
       - KAFKA_CFG_ZOOKEEPER_CONNECT=zookeeper:2181
       - KAFKA_CLIENT_USER=admin
+      - KAFKA_CFG_MAX_REQUEST_SIZE=10485760
     volumes:
       - kafka-data:/bitnami/kafka
     depends_on:
@@ -103,6 +104,8 @@ services:
     image: {{MODEL_IMAGE_NAME}}:{{VESSEL_TAG}}
     env_file:
       - .env
+    ports:
+      - ${MODELS_HOST_PORT:-8084}:3000
     restart: on-failure
 
 volumes:
