@@ -25,7 +25,7 @@ APP_VERSION=v1.4.0-alpha.${BUILD_NUM}
 # Branches can be used for development deployments
 VESSEL_TAG=sandbox
 CLIENT_TAG=sandbox
-HARVEST_TAG=dev
+HARVEST_TAG=main
 
 FUSEKI_TAG=1.4.0
 REDIS_TAG=6.0.5
@@ -60,7 +60,6 @@ CONTAINER_REG_ORG=gcr.io/ucdlib-pubreg
 CONTAINER_CACHE_TAG='latest'
 
 if [[ ! -z $LOCAL_BUILD ]]; then
-  CONTAINER_CACHE_TAG='local-dev'
   CONTAINER_REG_ORG=local-dev/ucdlib
 fi
 
