@@ -8,11 +8,12 @@ https://docs.google.com/drawings/d/1TvNR2_PHlqCFE6ptN4bmAiF3V9OxUWFaNqtkuK3sWnc
 
 # Contents
   - [Application Setup](#application-setup)
-  - [Development deployments](#development-deployments)
-  - [Production Deployments](#production-deployments)
-  - [Local Development](#local-development)
-    - [Setup](#local-development---setup)
-    - [Dev Cycle](#local-development---dev-cycle)
+  - [Deployments](#deployments)
+    - [Development deployments](#development-deployments)
+    - [Production Deployments](#production-deployments)
+    - [Local Development](#local-development)
+      - [Setup](#local-development---setup)
+      - [Dev Cycle](#local-development---dev-cycle)
   - [Usage](#usage)
     - [Env File](#env-file)
     - [Endpoints](#endpoints)
@@ -33,7 +34,13 @@ To run the the application, simply clone this repository at the tag/branch you w
  - Start docker-compose
    `docker-compose up`
 
-# Development deployments
+# Deployments
+
+Production deployments include any sites that we expect to be visited by users outside the library.  Currently, as experts is still in development, https://rc.experts.ucdavis.edu is the default production environment.  We allow users to review their data at https://stage.experts.ucdavis.edu/.  That should alwways be running the production application code as well.
+
+Development  deployments are for internal testing.  They are in the experts.library.ucdavis.edu domain. The site https://dev.experts.library.ucdvais.edu/ is the next production setup.  Other sites in this domain are for other testings.  In particular https://sandbox.experts.library.ucdavis.edu is a common developer test platform. 
+
+## Development deployments
 
 Development deployments, any non-master branch (production) deployment, have relaxed rules for their deployment definition (`config.sh`) to facilitate rapid builds and testing.
 
@@ -43,7 +50,7 @@ Development deployments, any non-master branch (production) deployment, have rel
   - IMPORTANT.  When you are ready to commit changes, run `./cmds/generate-deployment-files.sh` to build a new docker-compose.yml file(s) and k8s files (TODO) of this deployment setup.  Then you can commit your changes.
 
 
-# Production Deployments
+## Production Deployments
 
 Production deployments follow strict rules.  Please follow below.
 
@@ -65,11 +72,12 @@ Production deployments follow strict rules.  Please follow below.
 
 Done!
 
-# Local Development
+
+## Local Development
 
 Local development should be thought of has completely seperate from production or development deployments.  Local development images should NEVER leave your machine.  To protect agains local images deployed elsewhere, they will always be tagged with 'local-dev'.  To deploy development images to a server use the [Development Deployment](#development-deployments) described above.
 
-## Local Development - Setup
+### Local Development - Setup
 
 To get started with local development, do the following:
 
@@ -95,7 +103,7 @@ FUSEKI_PASSWORD=justinisgreat
 DEFAULT_ADMINS=jrmerz@ucdavis.edu quinn@ucdavis.edu
 ```
 
-## Local Development - Dev Cycle
+### Local Development - Dev Cycle
 
   - Make your code changes in your local repositories
     - See note below, you do not need to rebuild images on every change.  Just certain changes.
