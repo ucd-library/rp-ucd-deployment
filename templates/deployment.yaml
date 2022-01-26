@@ -40,6 +40,13 @@ services:
     depends_on:
       - "zookeeper"
 
+  kafka-init:
+    image: {{KAFKA_INIT_IMAGE_NAME}}:{{VESSEL_TAG}}
+    env_file:
+      - .env
+    depends_on:
+      - "zookeeper"
+
   redis:
     image: {{REDIS_IMAGE_NAME}}:{{REDIS_TAG}}
     volumes:
@@ -98,6 +105,12 @@ services:
       - .env
     ports:
       - ${INDEXER_HOST_PORT:-8082}:3000
+    restart: on-failure
+
+  status:
+    image: {{STATUS_IMAGE_NAME}}:{{VESSEL_TAG}}
+    env_file:
+      - .env
     restart: on-failure
 
   models:

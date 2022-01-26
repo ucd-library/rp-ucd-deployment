@@ -49,6 +49,13 @@ services:
     ports:
       - 9092:9092
 
+  kafka-init:
+    image: {{KAFKA_INIT_IMAGE_NAME}}:{{VESSEL_TAG}}
+    env_file:
+      - .env
+    depends_on:
+      - "zookeeper"
+
   redis:
     image: {{REDIS_IMAGE_NAME}}:{{REDIS_TAG}}
     volumes:
@@ -138,6 +145,15 @@ services:
     ports:
       - ${INDEXER_HOST_PORT:-8082}:3000
       # command: bash -c "tail -f /dev/null"
+
+  status:
+    image: {{STATUS_IMAGE_NAME}}:{{VESSEL_TAG}}
+    env_file:
+      - .env
+    volumes:
+      - ../{{REPOSITORY_DIR}}/{{VESSEL_REPO_NAME}}/status/index.js:/service/index.js
+      - ../{{REPOSITORY_DIR}}/{{VESSEL_REPO_NAME}}/status/lib:/service/lib
+    # command: bash -c "tail -f /dev/null"
 
   models:
     image: {{MODEL_IMAGE_NAME}}:{{VESSEL_TAG}}
