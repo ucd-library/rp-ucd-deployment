@@ -37,10 +37,10 @@ KAFKA_IMAGE_NAME_ESCAPED=$(echo $KAFKA_IMAGE_NAME | sed 's/\//\\\//g')
 ELASTIC_SEARCH_IMAGE_NAME_ESCAPED=$(echo $ELASTIC_SEARCH_IMAGE_NAME | sed 's/\//\\\//g')
 
 # generate local development dc file
+export LOCAL_BUILD=true
+source ../config.sh
+
 content=$(cat local-dev.yaml)
-VESSEL_TAG='local-dev'
-CLIENT_TAG='local-dev'
-HARVEST_TAG='local-dev'
 for key in $(compgen -v); do
   if [[ $key == "COMP_WORDBREAKS" || $key == "content" ]]; then
     continue;
