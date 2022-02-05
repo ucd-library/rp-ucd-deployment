@@ -41,7 +41,7 @@ services:
       - "zookeeper"
 
   kafka-init:
-    image: gcr.io/ucdlib-pubreg/rp-kafka-init:dev
+    image: gcr.io/ucdlib-pubreg/rp-kafka-init:main
     env_file:
       - .env
     depends_on:
@@ -108,7 +108,7 @@ services:
     restart: on-failure
 
   status:
-    image: gcr.io/ucdlib-pubreg/rp-index-status:dev
+    image: gcr.io/ucdlib-pubreg/rp-index-status:main
     env_file:
       - .env
     restart: on-failure
