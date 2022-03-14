@@ -135,11 +135,14 @@ services:
     image: {{NODE_SERVICES_IMAGE_NAME}}:{{VESSEL_TAG}}
     env_file:
       - .env
+    environment:
+      - GOOGLE_APPLICATION_CREDENTIALS=/etc/service-account.json
     volumes:
       - ../{{REPOSITORY_DIR}}/{{VESSEL_REPO_NAME}}/node-services/lib:/aggie-experts/lib
       - ../{{REPOSITORY_DIR}}/{{VESSEL_REPO_NAME}}/node-services/services:/aggie-experts/services
-    command: npm run gcs
-    # command: bash -c "tail -f /dev/null"
+      - ./service-account.json:/etc/service-account.json
+    # command: npm run gcs
+    command: bash -c "tail -f /dev/null"
 
   models:
     image: {{NODE_SERVICES_IMAGE_NAME}}:{{VESSEL_TAG}}
