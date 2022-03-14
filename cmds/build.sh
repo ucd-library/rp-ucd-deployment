@@ -17,30 +17,17 @@ fi
 
 VESSEL_REPO_HASH=$(git -C $REPOSITORY_DIR/$VESSEL_REPO_NAME log -1 --pretty=%h)
 CLIENT_REPO_HASH=$(git -C $REPOSITORY_DIR/$CLIENT_REPO_NAME log -1 --pretty=%h)
-HARVEST_REPO_HASH=$(git -C $REPOSITORY_DIR/$HARVEST_REPO_NAME log -1 --pretty=%h)
-
-##
-# Harvest
-##
-
-docker build \
-  -t $HARVEST_IMAGE_NAME_TAG \
-  --build-arg BUILDKIT_INLINE_CACHE=1 \
-  --cache-from=$HARVEST_IMAGE_NAME:$CONTAINER_CACHE_TAG \
-  $REPOSITORY_DIR/$HARVEST_REPO_NAME
 
 ##
 # Vessel
 ##
 
-NODEJS_BASE=$NODE_UTILS_IMAGE_NAME_TAG
-
-# nodejs baselayer
+# nodejs services
 docker build \
-  -t $NODEJS_BASE \
+  -t $NODE_SERVICES_IMAGE_NAME_TAG \
   --build-arg BUILDKIT_INLINE_CACHE=1 \
-  --cache-from=$NODE_UTILS_IMAGE_NAME:$CONTAINER_CACHE_TAG \
-  $REPOSITORY_DIR/$VESSEL_REPO_NAME/node-utils
+  --cache-from=$NODE_SERVICES_IMAGE_NAME:$CONTAINER_CACHE_TAG \
+  $REPOSITORY_DIR/$VESSEL_REPO_NAME/node-services
 
 # kafka init
 docker build \
@@ -50,62 +37,6 @@ docker build \
   --cache-from=$KAFKA_INIT_IMAGE_NAME:$CONTAINER_CACHE_TAG \
   $REPOSITORY_DIR/$VESSEL_REPO_NAME/kafka-init
 
-# kafka rdf-patch debouncer
-docker build \
-  -t $DEBOUNCER_IMAGE_NAME_TAG \
-  --build-arg BUILDKIT_INLINE_CACHE=1 \
-  --build-arg NODEJS_BASE=${NODEJS_BASE} \
-  --cache-from=$DEBOUNCER_IMAGE_NAME:$CONTAINER_CACHE_TAG \
-  $REPOSITORY_DIR/$VESSEL_REPO_NAME/debouncer
-
-# elastic search indexer
-docker build \
-  -t $INDEXER_IMAGE_NAME_TAG \
-  --build-arg BUILDKIT_INLINE_CACHE=1 \
-  --build-arg NODEJS_BASE=${NODEJS_BASE} \
-  --cache-from=$INDEXER_IMAGE_NAME:$CONTAINER_CACHE_TAG \
-  $REPOSITORY_DIR/$VESSEL_REPO_NAME/es-indexer
-
-# indexer status
-docker build \
-  -t $STATUS_IMAGE_NAME_TAG \
-  --build-arg BUILDKIT_INLINE_CACHE=1 \
-  --build-arg NODEJS_BASE=${NODEJS_BASE} \
-  --cache-from=$STATUS_IMAGE_NAME:$CONTAINER_CACHE_TAG \
-  $REPOSITORY_DIR/$VESSEL_REPO_NAME/status
-
-# elastic search models
-docker build \
-  -t $MODEL_IMAGE_NAME_TAG \
-  --build-arg BUILDKIT_INLINE_CACHE=1 \
-  --build-arg NODEJS_BASE=${NODEJS_BASE} \
-  --cache-from=$MODEL_IMAGE_NAME:$CONTAINER_CACHE_TAG \
-  $REPOSITORY_DIR/$VESSEL_REPO_NAME/es-models
-
-# elastic search api
-docker build \
-  -t $API_IMAGE_NAME_TAG \
-  --build-arg BUILDKIT_INLINE_CACHE=1 \
-  --build-arg NODEJS_BASE=${NODEJS_BASE} \
-  --cache-from=$API_IMAGE_NAME:$CONTAINER_CACHE_TAG \
-  $REPOSITORY_DIR/$VESSEL_REPO_NAME/api
-
-# auth
-docker build \
-  -t $AUTH_IMAGE_NAME_TAG \
-  --build-arg BUILDKIT_INLINE_CACHE=1 \
-  --build-arg NODEJS_BASE=${NODEJS_BASE} \
-  --cache-from=$AUTH_IMAGE_NAME:$CONTAINER_CACHE_TAG \
-  $REPOSITORY_DIR/$VESSEL_REPO_NAME/auth-cas
-
-# gateway
-docker build \
-  -t $GATEWAY_IMAGE_NAME_TAG \
-  --build-arg BUILDKIT_INLINE_CACHE=1 \
-  --build-arg NODEJS_BASE=${NODEJS_BASE} \
-  --cache-from=$GATEWAY_IMAGE_NAME:$CONTAINER_CACHE_TAG \
-  $REPOSITORY_DIR/$VESSEL_REPO_NAME/gateway
-
 ##
 # Client
 ##
@@ -113,7 +44,7 @@ docker build \
 docker build \
   -t $CLIENT_IMAGE_NAME_TAG \
   --build-arg BUILDKIT_INLINE_CACHE=1 \
-  --build-arg NODEJS_BASE=${NODEJS_BASE} \
+  --build-arg NODEJS_BASE=${NODE_SERVICES_IMAGE_NAME_TAG} \
   --build-arg CLIENT_TAG=${CLIENT_TAG} \
   --build-arg VESSEL_TAG=${VESSEL_TAG} \
   --build-arg BUILD_NUM=${BUILD_NUM} \

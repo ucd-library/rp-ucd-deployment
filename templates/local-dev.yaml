@@ -18,21 +18,6 @@ services:
     ports:
       - ${FUSEKI_HOST_PORT:-8081}:3030
 
-  harvest:
-    image: {{HARVEST_IMAGE_NAME}}:{{HARVEST_TAG}}
-    env_file:
-      - .env
-    volumes:
-       - harvest-xslt-data:/usr/local/vivo/harvester/data
-       - harvest-data:/var/lib/harvest
-       - ../{{REPOSITORY_DIR}}/{{HARVEST_REPO_NAME}}/lib:/usr/local/lib/harvest
-       - ../{{REPOSITORY_DIR}}/{{HARVEST_REPO_NAME}}/ucdid:/usr/local/bin/ucdid
-       - ../{{REPOSITORY_DIR}}/{{HARVEST_REPO_NAME}}/cdl:/usr/local/bin/cdl
-       - ../{{REPOSITORY_DIR}}/{{HARVEST_REPO_NAME}}/harvest:/usr/local/bin/harvest
-       - ../{{REPOSITORY_DIR}}/{{HARVEST_REPO_NAME}}/lib/node/lib:/service/lib
-       - ../{{REPOSITORY_DIR}}/{{HARVEST_REPO_NAME}}/lib/node/index.js:/service/index.js
-    command: tail -f /dev/null
-
   kafka:
     image: {{KAFKA_IMAGE_NAME}}:{{KAFKA_TAG}}
     env_file:
@@ -87,7 +72,7 @@ services:
     # command: bash -c "tail -f /dev/null"
 
   gateway:
-    image: {{GATEWAY_IMAGE_NAME}}:{{VESSEL_TAG}}
+    image: {{NODE_SERVICES_IMAGE_NAME}}:{{VESSEL_TAG}}
     env_file:
       - .env
     environment:
@@ -95,75 +80,77 @@ services:
     ports:
       - ${HOST_PORT:-8080}:3000
     volumes:
-      - ../{{REPOSITORY_DIR}}/{{VESSEL_REPO_NAME}}/gateway/index.js:/service/index.js
-      - ../{{REPOSITORY_DIR}}/{{VESSEL_REPO_NAME}}/gateway/controllers:/service/controllers
-      - ../{{REPOSITORY_DIR}}/{{VESSEL_REPO_NAME}}/gateway/lib:/service/lib
+      - ../{{REPOSITORY_DIR}}/{{VESSEL_REPO_NAME}}/node-services/lib:/aggie-experts/lib
+      - ../{{REPOSITORY_DIR}}/{{VESSEL_REPO_NAME}}/node-services/services:/aggie-experts/services
+    command: npm run gateway
     # command: bash -c "tail -f /dev/null"
 
   auth:
-    image: {{AUTH_IMAGE_NAME}}:{{VESSEL_TAG}}
+    image: {{NODE_SERVICES_IMAGE_NAME}}:{{VESSEL_TAG}}
     env_file:
       - .env
     environment:
       - CAS_URL=${CAS_URL:-https://ssodev.ucdavis.edu/cas}
     volumes:
-      - ../{{REPOSITORY_DIR}}/{{VESSEL_REPO_NAME}}/auth-cas/index.js:/service/index.js
-      - ../{{REPOSITORY_DIR}}/{{VESSEL_REPO_NAME}}/auth-cas/controller.js:/service/controller.js
+      - ../{{REPOSITORY_DIR}}/{{VESSEL_REPO_NAME}}/node-services/lib:/aggie-experts/lib
+      - ../{{REPOSITORY_DIR}}/{{VESSEL_REPO_NAME}}/node-services/services:/aggie-experts/services
+    command: npm run auth-cas
     # command: bash -c "tail -f /dev/null"
 
   api:
-    image: {{API_IMAGE_NAME}}:{{VESSEL_TAG}}
+    image: {{NODE_SERVICES_IMAGE_NAME}}:{{VESSEL_TAG}}
     env_file:
       - .env
     volumes:
-      - ../{{REPOSITORY_DIR}}/{{VESSEL_REPO_NAME}}/api/index.js:/service/index.js
-      - ../{{REPOSITORY_DIR}}/{{VESSEL_REPO_NAME}}/api/lib:/service/lib
-      - ../{{REPOSITORY_DIR}}/{{VESSEL_REPO_NAME}}/api/controllers:/service/controllers
-      - ../{{REPOSITORY_DIR}}/{{VESSEL_REPO_NAME}}/api/models:/service/models
+      - ../{{REPOSITORY_DIR}}/{{VESSEL_REPO_NAME}}/node-services/lib:/aggie-experts/lib
+      - ../{{REPOSITORY_DIR}}/{{VESSEL_REPO_NAME}}/node-services/services:/aggie-experts/services
     ports:
       - ${API_HOST_PORT:-8083}:3000
-    # command: bash -c "tail -f /dev/null"
-
-  debouncer:
-    image: {{DEBOUNCER_IMAGE_NAME}}:{{VESSEL_TAG}}
-    env_file:
-      - .env
-    volumes:
-      - ../{{REPOSITORY_DIR}}/{{VESSEL_REPO_NAME}}/debouncer/index.js:/service/index.js
-      - ../{{REPOSITORY_DIR}}/{{VESSEL_REPO_NAME}}/debouncer/lib:/service/lib
+    command: npm run api
     # command: bash -c "tail -f /dev/null"
 
   indexer:
-    image: {{INDEXER_IMAGE_NAME}}:{{VESSEL_TAG}}
+    image: {{NODE_SERVICES_IMAGE_NAME}}:{{VESSEL_TAG}}
     env_file:
       - .env
     volumes:
-      - ../{{REPOSITORY_DIR}}/{{VESSEL_REPO_NAME}}/es-indexer/index.js:/service/index.js
-      - ../{{REPOSITORY_DIR}}/{{VESSEL_REPO_NAME}}/es-indexer/lib:/service/lib
-      - ../{{REPOSITORY_DIR}}/{{VESSEL_REPO_NAME}}/es-indexer/controllers:/service/controllers
+      - ../{{REPOSITORY_DIR}}/{{VESSEL_REPO_NAME}}/node-services/lib:/aggie-experts/lib
+      - ../{{REPOSITORY_DIR}}/{{VESSEL_REPO_NAME}}/node-services/services:/aggie-experts/services
     ports:
       - ${INDEXER_HOST_PORT:-8082}:3000
-      # command: bash -c "tail -f /dev/null"
+    command: npm run api
+    # command: bash -c "tail -f /dev/null"
 
   status:
-    image: {{STATUS_IMAGE_NAME}}:{{VESSEL_TAG}}
+    image: {{NODE_SERVICES_IMAGE_NAME}}:{{VESSEL_TAG}}
     env_file:
       - .env
     volumes:
-      - ../{{REPOSITORY_DIR}}/{{VESSEL_REPO_NAME}}/status/index.js:/service/index.js
-      - ../{{REPOSITORY_DIR}}/{{VESSEL_REPO_NAME}}/status/lib:/service/lib
+      - ../{{REPOSITORY_DIR}}/{{VESSEL_REPO_NAME}}/node-services/lib:/aggie-experts/lib
+      - ../{{REPOSITORY_DIR}}/{{VESSEL_REPO_NAME}}/node-services/services:/aggie-experts/services
+    command: npm run status
+    # command: bash -c "tail -f /dev/null"
+
+  gcs:
+    image: {{NODE_SERVICES_IMAGE_NAME}}:{{VESSEL_TAG}}
+    env_file:
+      - .env
+    volumes:
+      - ../{{REPOSITORY_DIR}}/{{VESSEL_REPO_NAME}}/node-services/lib:/aggie-experts/lib
+      - ../{{REPOSITORY_DIR}}/{{VESSEL_REPO_NAME}}/node-services/services:/aggie-experts/services
+    command: npm run gcs
     # command: bash -c "tail -f /dev/null"
 
   models:
-    image: {{MODEL_IMAGE_NAME}}:{{VESSEL_TAG}}
+    image: {{NODE_SERVICES_IMAGE_NAME}}:{{VESSEL_TAG}}
     env_file:
       - .env
     volumes:
-      - ../{{REPOSITORY_DIR}}/{{VESSEL_REPO_NAME}}/es-models/index.js:/service/index.js
-      - ../{{REPOSITORY_DIR}}/{{VESSEL_REPO_NAME}}/es-models/default:/service/default
-      - ../{{REPOSITORY_DIR}}/{{VESSEL_REPO_NAME}}/es-models/model:/service/model
+      - ../{{REPOSITORY_DIR}}/{{VESSEL_REPO_NAME}}/node-services/lib:/aggie-experts/lib
+      - ../{{REPOSITORY_DIR}}/{{VESSEL_REPO_NAME}}/node-services/services:/aggie-experts/services
     ports:
       - ${MODEL_HOST_PORT:-8084}:3000
+    command: npm run es-models
     # command: bash -c "tail -f /dev/null"
 
 volumes:
