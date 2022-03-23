@@ -14,7 +14,11 @@ fi
 
 # Main version number we are tagging the app with. Always update
 # this when you cut a new version of the app!
+<<<<<<< HEAD
 APP_VERSION=v1.6.0-rc.${BUILD_NUM}
+=======
+APP_VERSION=v1.6.0.${BUILD_NUM}
+>>>>>>> main
 
 ##
 # TAGS
