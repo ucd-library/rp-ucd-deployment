@@ -93,8 +93,23 @@ services:
       - .env
     ports:
       - ${INDEXER_HOST_PORT:-8082}:3000
+    environment:
+      - GOOGLE_APPLICATION_CREDENTIALS=/etc/service-account.json
+    volumes:
+      - ./service-account.json:/etc/service-account.json
     restart: on-failure
     command: npm run es-indexer
+
+  gcs:
+    image: gcr.io/ucdlib-pubreg/rp-ucd-node-services:jm-gcs
+    env_file:
+      - .env
+    environment:
+      - GOOGLE_APPLICATION_CREDENTIALS=/etc/service-account.json
+    volumes:
+      - ./service-account.json:/etc/service-account.json
+    restart: on-failure
+    command: npm run gcs
 
   status:
     image: gcr.io/ucdlib-pubreg/rp-ucd-node-services:jm-gcs
@@ -107,8 +122,12 @@ services:
     image: gcr.io/ucdlib-pubreg/rp-ucd-node-services:jm-gcs
     env_file:
       - .env
+    environment:
+      - GOOGLE_APPLICATION_CREDENTIALS=/etc/service-account.json
     ports:
       - ${MODELS_HOST_PORT:-8084}:3000
+    volumes:
+      - ./service-account.json:/etc/service-account.json
     restart: on-failure
     command: npm run es-models
 

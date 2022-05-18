@@ -67,6 +67,9 @@ services:
     env_file:
       - .env
     volumes:
+      - ../{{REPOSITORY_DIR}}/{{VESSEL_REPO_NAME}}/node-services/default-models:/etc/vessel/models
+      - ../{{REPOSITORY_DIR}}/{{VESSEL_REPO_NAME}}/node-services/lib:/aggie-experts/lib
+      - ../{{REPOSITORY_DIR}}/{{VESSEL_REPO_NAME}}/node-services/services:/aggie-experts/services
       - ../{{REPOSITORY_DIR}}/{{CLIENT_REPO_NAME}}/index.js:/server/index.js
       - ../{{REPOSITORY_DIR}}/{{CLIENT_REPO_NAME}}/lib:/server/lib
       - ../{{REPOSITORY_DIR}}/{{CLIENT_REPO_NAME}}/controllers:/server/controllers
@@ -82,6 +85,7 @@ services:
     ports:
       - ${HOST_PORT:-8080}:3000
     volumes:
+      - ../{{REPOSITORY_DIR}}/{{VESSEL_REPO_NAME}}/node-services/default-models:/etc/vessel/models
       - ../{{REPOSITORY_DIR}}/{{VESSEL_REPO_NAME}}/node-services/lib:/aggie-experts/lib
       - ../{{REPOSITORY_DIR}}/{{VESSEL_REPO_NAME}}/node-services/services:/aggie-experts/services
     command: npm run gateway
@@ -94,6 +98,7 @@ services:
     environment:
       - CAS_URL=${CAS_URL:-https://ssodev.ucdavis.edu/cas}
     volumes:
+      - ../{{REPOSITORY_DIR}}/{{VESSEL_REPO_NAME}}/node-services/default-models:/etc/vessel/models
       - ../{{REPOSITORY_DIR}}/{{VESSEL_REPO_NAME}}/node-services/lib:/aggie-experts/lib
       - ../{{REPOSITORY_DIR}}/{{VESSEL_REPO_NAME}}/node-services/services:/aggie-experts/services
     command: npm run auth-cas
@@ -104,6 +109,7 @@ services:
     env_file:
       - .env
     volumes:
+      - ../{{REPOSITORY_DIR}}/{{VESSEL_REPO_NAME}}/node-services/default-models:/etc/vessel/models
       - ../{{REPOSITORY_DIR}}/{{VESSEL_REPO_NAME}}/node-services/lib:/aggie-experts/lib
       - ../{{REPOSITORY_DIR}}/{{VESSEL_REPO_NAME}}/node-services/services:/aggie-experts/services
     ports:
@@ -116,22 +122,13 @@ services:
     env_file:
       - .env
     volumes:
+      - ../{{REPOSITORY_DIR}}/{{VESSEL_REPO_NAME}}/node-services/default-models:/etc/vessel/models
       - ../{{REPOSITORY_DIR}}/{{VESSEL_REPO_NAME}}/node-services/lib:/aggie-experts/lib
       - ../{{REPOSITORY_DIR}}/{{VESSEL_REPO_NAME}}/node-services/services:/aggie-experts/services
       - ./service-account.json:/etc/service-account.json
     ports:
       - ${INDEXER_HOST_PORT:-8082}:3000
     command: npm run es-indexer
-    # command: bash -c "tail -f /dev/null"
-
-  status:
-    image: {{NODE_SERVICES_IMAGE_NAME}}:{{VESSEL_TAG}}
-    env_file:
-      - .env
-    volumes:
-      - ../{{REPOSITORY_DIR}}/{{VESSEL_REPO_NAME}}/node-services/lib:/aggie-experts/lib
-      - ../{{REPOSITORY_DIR}}/{{VESSEL_REPO_NAME}}/node-services/services:/aggie-experts/services
-    command: npm run status
     # command: bash -c "tail -f /dev/null"
 
   gcs:
@@ -141,6 +138,7 @@ services:
     environment:
       - GOOGLE_APPLICATION_CREDENTIALS=/etc/service-account.json
     volumes:
+      - ../{{REPOSITORY_DIR}}/{{VESSEL_REPO_NAME}}/node-services/default-models:/etc/vessel/models
       - ../{{REPOSITORY_DIR}}/{{VESSEL_REPO_NAME}}/node-services/lib:/aggie-experts/lib
       - ../{{REPOSITORY_DIR}}/{{VESSEL_REPO_NAME}}/node-services/services:/aggie-experts/services
       - ./service-account.json:/etc/service-account.json
@@ -154,6 +152,7 @@ services:
     env_file:
       - .env
     volumes:
+      - ../{{REPOSITORY_DIR}}/{{VESSEL_REPO_NAME}}/node-services/default-models:/etc/vessel/models
       - ../{{REPOSITORY_DIR}}/{{VESSEL_REPO_NAME}}/node-services/lib:/aggie-experts/lib
       - ../{{REPOSITORY_DIR}}/{{VESSEL_REPO_NAME}}/node-services/services:/aggie-experts/services
       - ./service-account.json:/etc/service-account.json
