@@ -10,7 +10,7 @@ services:
       - zookeeper-datalog:/datalog
 
   fuseki:
-    image: gcr.io/ucdlib-pubreg/rp-ucd-fuseki:1.4.0
+    image: gcr.io/ucdlib-pubreg/rp-ucd-fuseki:1.5.0
     env_file:
       - .env
     volumes:
