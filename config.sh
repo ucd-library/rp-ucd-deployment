@@ -14,7 +14,7 @@ fi
 
 # Main version number we are tagging the app with. Always update
 # this when you cut a new version of the app!
-APP_VERSION=v1.6.0.${BUILD_NUM}
+APP_VERSION=v1.7.0.${BUILD_NUM}
 
 ##
 # TAGS
@@ -23,9 +23,9 @@ APP_VERSION=v1.6.0.${BUILD_NUM}
 # Repository tags/branchs
 # Tags should always be used for production deployments
 # Branches can be used for development deployments
-VESSEL_TAG=main
-CLIENT_TAG=main
-HARVEST_TAG=main
+VESSEL_TAG=v1.7.0
+CLIENT_TAG=v1.7.0
+HARVEST_TAG=v1.7.0
 
 # set local-dev tags used by
 # local development docker-compose file
@@ -35,7 +35,7 @@ HARVEST_TAG=main
 #  HARVEST_TAG='local-dev'
 #fi
 
-FUSEKI_TAG=1.4.0
+FUSEKI_TAG=1.5.0
 REDIS_TAG=6.0.5
 ZOOKEEPER_TAG=3.6
 KAFKA_TAG=2.5.0

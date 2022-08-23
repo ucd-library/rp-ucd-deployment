@@ -10,7 +10,7 @@ services:
       - zookeeper-datalog:/datalog
 
   fuseki:
-    image: gcr.io/ucdlib-pubreg/rp-ucd-fuseki:1.4.0
+    image: gcr.io/ucdlib-pubreg/rp-ucd-fuseki:1.5.0
     env_file:
       - .env
     volumes:
@@ -19,7 +19,7 @@ services:
       - ${FUSEKI_HOST_PORT:-8081}:3030
 
   harvest:
-    image: gcr.io/ucdlib-pubreg/rp-ucd-harvest:main
+    image: gcr.io/ucdlib-pubreg/rp-ucd-harvest:v1.7.0
     env_file:
       - .env
     volumes:
@@ -41,7 +41,7 @@ services:
       - "zookeeper"
 
   kafka-init:
-    image: gcr.io/ucdlib-pubreg/rp-kafka-init:main
+    image: gcr.io/ucdlib-pubreg/rp-kafka-init:v1.7.0
     env_file:
       - .env
     depends_on:
@@ -66,13 +66,13 @@ services:
       - es-data:/usr/share/elasticsearch/data
 
   client:
-    image: gcr.io/ucdlib-pubreg/rp-ucd-client:main
+    image: gcr.io/ucdlib-pubreg/rp-ucd-client:v1.7.0
     env_file:
       - .env
     restart: on-failure
 
   gateway:
-    image: gcr.io/ucdlib-pubreg/rp-ucd-gateway:main
+    image: gcr.io/ucdlib-pubreg/rp-ucd-gateway:v1.7.0
     env_file:
       - .env
     ports:
@@ -80,7 +80,7 @@ services:
     restart: on-failure
 
   auth:
-    image: gcr.io/ucdlib-pubreg/rp-ucd-auth-cas:main
+    image: gcr.io/ucdlib-pubreg/rp-ucd-auth-cas:v1.7.0
     env_file:
       - .env
     environment:
@@ -88,19 +88,19 @@ services:
     restart: on-failure
 
   api:
-    image: gcr.io/ucdlib-pubreg/rp-ucd-api:main
+    image: gcr.io/ucdlib-pubreg/rp-ucd-api:v1.7.0
     env_file:
       - .env
     restart: on-failure
 
   debouncer:
-    image: gcr.io/ucdlib-pubreg/rp-ucd-kafka-debouncer:main
+    image: gcr.io/ucdlib-pubreg/rp-ucd-kafka-debouncer:v1.7.0
     env_file:
       - .env
     restart: on-failure
 
   indexer:
-    image: gcr.io/ucdlib-pubreg/rp-ucd-es-indexer:main
+    image: gcr.io/ucdlib-pubreg/rp-ucd-es-indexer:v1.7.0
     env_file:
       - .env
     ports:
@@ -108,13 +108,13 @@ services:
     restart: on-failure
 
   status:
-    image: gcr.io/ucdlib-pubreg/rp-index-status:main
+    image: gcr.io/ucdlib-pubreg/rp-index-status:v1.7.0
     env_file:
       - .env
     restart: on-failure
 
   models:
-    image: gcr.io/ucdlib-pubreg/rp-ucd-es-models:main
+    image: gcr.io/ucdlib-pubreg/rp-ucd-es-models:v1.7.0
     env_file:
       - .env
     ports:
