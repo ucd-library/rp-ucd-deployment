@@ -14,7 +14,7 @@ fi
 
 # Main version number we are tagging the app with. Always update
 # this when you cut a new version of the app!
-APP_VERSION=v1.6.1-dev.${BUILD_NUM}
+APP_VERSION=v1.7.0-dev.${BUILD_NUM}
 
 ##
 # TAGS
@@ -35,7 +35,7 @@ HARVEST_TAG=dev
 #  HARVEST_TAG='local-dev'
 #fi
 
-FUSEKI_TAG=1.4.0
+FUSEKI_TAG=1.5.0
 REDIS_TAG=6.0.5
 ZOOKEEPER_TAG=3.6
 KAFKA_TAG=2.5.0
