@@ -1,0 +1,199 @@
+* Grants Test
+:PROPERTIES:
+:header-args:http: :host http://localhost:18081 :user admin:quinnisgreat
+:header-args:sparqlx: :url http://sparql.org/sparql :format text/csv
+:header-args:sparql: :url http://localhost:18081/experts/sparql :format text/csv
+:END:
+
+
+** Installation
+
+#+BEGIN_SRC elisp
+(org-babel-lob-ingest "~/aeq/lib/prefixes.org");
+#+END_SRC
+
+#+RESULTS:
+: 3
+
+#+call: lob-ingest-file(file="~/aeq/lib/prefixes.org")
+
+
+
+#+begin_src bash
+gsutil cat gs://aggie-experts-sandbox/private/grants.json.gz | zcat |\
+docker-compose exec -T fuseki curl --data-binary @- -X POST  http://fuseki:3030/private/data -H "Content-Type: application/ld+json"
+   #+end_src
+
+
+#+begin_src sparql :url http://localhost:18081/private/sparql
+  select ?g ?type (count(*) as ?cnt) WHERE { graph ?g {?s a ?type. }} group by ?g ?type order by ?g ?type
+#+end_src
+
+#+RESULTS:
+| g                               | type                                                               |   cnt |
+|---------------------------------+--------------------------------------------------------------------+-------|
+| http://experts.ucdavis.edu/     | http://experts.ucdavis.edu/schema#graph                            |     2 |
+| http://experts.ucdavis.edu/     | http://experts.ucdavis.edu/schema#private_graph                    |     2 |
+| http://experts.ucdavis.edu/fis/ | http://experts.ucdavis.edu/schema#ChartOfAccounts                  |     8 |
+| http://experts.ucdavis.edu/fis/ | http://experts.ucdavis.edu/schema#GrantAccountManagerRole          | 18416 |
+| http://experts.ucdavis.edu/fis/ | http://experts.ucdavis.edu/schema#GrantCoPrincipalInvestigatorRole |  7036 |
+| http://experts.ucdavis.edu/fis/ | http://experts.ucdavis.edu/schema#GrantCoreLeaderRole              |    96 |
+| http://experts.ucdavis.edu/fis/ | http://experts.ucdavis.edu/schema#GrantKeyPersonnelRole            |   892 |
+| http://experts.ucdavis.edu/fis/ | http://experts.ucdavis.edu/schema#GrantOtherRole                   |  2153 |
+| http://experts.ucdavis.edu/fis/ | http://experts.ucdavis.edu/schema#GrantPrincipalInvestigatorRole   | 39571 |
+| http://experts.ucdavis.edu/fis/ | http://experts.ucdavis.edu/schema#GrantProgramDirectorRole         |   158 |
+| http://experts.ucdavis.edu/fis/ | http://experts.ucdavis.edu/schema#GrantProjectLeaderRole           |   214 |
+| http://experts.ucdavis.edu/fis/ | http://experts.ucdavis.edu/schema#GrantType                        |     7 |
+| http://experts.ucdavis.edu/fis/ | http://experts.ucdavis.edu/schema#person                           |  6303 |
+| http://experts.ucdavis.edu/fis/ | http://vivoweb.org/ontology/core#AdminRole                         | 30305 |
+| http://experts.ucdavis.edu/fis/ | http://vivoweb.org/ontology/core#CoPrincipalInvestigatorRole       |  7036 |
+| http://experts.ucdavis.edu/fis/ | http://vivoweb.org/ontology/core#DateTimeInterval                  | 40633 |
+| http://experts.ucdavis.edu/fis/ | http://vivoweb.org/ontology/core#DateTimeValue                     | 81266 |
+| http://experts.ucdavis.edu/fis/ | http://vivoweb.org/ontology/core#Department                        |  1327 |
+| http://experts.ucdavis.edu/fis/ | http://vivoweb.org/ontology/core#FundingOrganization               |  4729 |
+| http://experts.ucdavis.edu/fis/ | http://vivoweb.org/ontology/core#Grant                             | 43767 |
+| http://experts.ucdavis.edu/fis/ | http://vivoweb.org/ontology/core#LeaderRole                        |   372 |
+| http://experts.ucdavis.edu/fis/ | http://vivoweb.org/ontology/core#PrincipalInvestigatorRole         | 39571 |
+| http://experts.ucdavis.edu/fis/ | http://vivoweb.org/ontology/core#ResearcherRole                    | 21564 |
+| http://experts.ucdavis.edu/fis/ | http://xmlns.com/foaf/0.1/Organization                             |  1327 |
+
+
+Now check for grants that are sub-awards, and that are in the current set of
+users we have.
+
+#+begin_src sparql :noweb yes
+  <<prefixes>>
+  select ?cas (count(*) as ?cnt) where
+  {
+    VALUES ?cas {
+      "quinn" "aabutt" "aalfonso" "aarander" "aaron123" "aawang" "aercan" "aforrest" "aldredge" "amart" "amenta" "amoghimi"
+  "amoule" "anpalazo" "anparikh" "apanitch" "apfan" "ariank" "ark245" "aylouie" "bbruce" "bcgates" "bcmarti2" "bdgill"
+  "bdshaw" "benthem" "bishop" "bombarde" "bougis" "brad1113" "bravani" "bslinke" "cbronner" "cdcappa" "cedavis" "cejli"
+  "chen" "chkim" "chmkim" "chqtu" "cjnitta" "ckrona" "cmspad" "cmtan" "cpvandam" "crubio" "cyachen" "cytomy" "daccache"
+  "dafrank" "dan" "danhung" "darylp" "dawcheng" "dcs" "deblock" "delwiche" "devanbu" "dhills" "dhorsley" "djjones"
+  "dlosborn" "dmrocke" "dmstrick" "dokbrown" "donchig" "doty" "dpfyhrie" "dsperlin" "duan" "eberg" "edgross" "eiselt"
+  "emarvinn" "erevilla" "ergoman" "eroncali" "esilva" "estimate" "ez055537" "farouki" "fassadia" "fgygi" "fjloge"
+  "fkhorsan" "fzboulan" "fzchai" "fzcheng" "fzhartso" "fzjenkin" "fzmcd" "fzraul" "fzsingh" "fzyoung" "gangsun" "garino"
+  "ghosal" "glaky" "glaucia" "gmb" "grgmille" "hbischel" "hbscher" "hchzhang" "hciwang" "heelmash" "hkakwere" "hmanikan"
+  "hmzhang" "holdroyd" "hpirsiav" "idavidso" "ikekim" "ikhan" "ikisekka" "iliast" "inpessah" "irdonisg" "isoltani"
+  "jamccoy" "jamiles" "jamlewis" "jarwhite" "jcgib" "jdejong" "jdemoura" "jdfbayo" "jdherman" "jdlea" "jdwan" "jeboland"
+  "jeremic" "jfthomps" "jhkchoi" "jiwzhang" "jkissock" "jkleach" "jkmason" "jlp" "jmboone" "jmearles" "jmjjiang" "joyu"
+  "jpanetta" "jpdelp" "jporquet" "jrlund" "jrmerz" "jscurtis" "jsmullin" "jsschofi" "jsvander" "jtharvey" "juliesu" "jwdu"
+  "jwpark" "jyqi" "jzfan" "kanvinde" "kendalla" "khbates" "khir" "kingst" "kkorn" "koehl" "kstevens" "kupergj" "kziot" "lasky" "leverenz" "lmarcu" "loveme" "lsaiz" "lxflin" "ma" "maejoshi" "maevinod" "mahamed" "masavage" "maswang" "matloff" "maxtorna" "mbarbato" "mfacciot" "mfarrens" "mfbutner" "mfplatze" "mgrismer" "mhafez" "mjaller" "mjellis" "mjkleema" "mkfrankl" "mleite" "mlkavvas" "mmrashid" "moxon" "mrhill" "msadoghi" "msoshi" "mstickle" "naadavis" "nael" "neff" "ngjensen" "ngoldman" "nnitin" "nnrai" "npan" "nsarigul" "nsukumar" "oreilly" "pae" "palarbi" "passerin" "pena" "pggreen" "pourreza" "prasant" "prsshah" "raissa" "rbadawi" "rcarney" "rfaller" "rgarrett" "rhcastro" "rhzhang" "rkukreja" "rlcorsi" "rogaway" "rowlandd" "rrunneba" "rydavis" "rzwu" "sabmil" "sanjeevi" "saviran" "sbsen" "scgeorge" "schladow" "sfwu" "shirure" "shrini" "shzeroni" "sjmccorm" "skulee" "skunnath" "smhowell" "snandi" "snazari" "snyfer" "speisert" "spencerb" "spgentry" "srafatir" "srbare" "srcherry" "srdungan" "sshong" "sssrobin" "sunkwon" "syamada" "szmir" "szstiles" "tasano" "tganguly" "thakur" "tjeoh" "tlkuhl" "trojalin" "ttopping" "vensberg" "veromora" "vjsriniv" "vlasapon" "vlfilkov" "volkmar" "wdr" "weber" "wesyates" "xinliu" "yafrid" "ychenizu" "yiseri" "yjl" "yjtsai" "ylhsieh" "younis" "ytakamur" "yxxue" "yyfan" "zadeh" "zbai" "zdkong" "zhang" "zlpan" "zubair" "rcallcut"
+    }
+    ?s ucdrp:subAwardOf ?o;
+       vivo:relates ?pi;
+       .
+    ?pi a ucdrp:person;
+        ucdrp:casId ?cas;
+        .
+  } group by ?cas order by desc(?cnt) limit 10
+#+end_src
+
+#+RESULTS:
+| cas      | cnt |
+|----------+-----|
+| jtharvey |  16 |
+| cedavis  |  13 |
+| schladow |   9 |
+| jmboone  |   8 |
+| mmrashid |   8 |
+| ergoman  |   7 |
+| ma       |   7 |
+| nnitin   |   6 |
+| sssrobin |   6 |
+| jpdelp   |   5 |
+
+
+Okay,so that's a good list:
+
+#+begin_src :format raw
+#users='qjhart cedavis ergoman jmboone jpdelp jtharvey ma mmrashid nnitin schladow sssrobin'
+users='qjhart cedavis jtharvey schladow'
+docker-compose exec harvest harvest -v login
+for id in $users; do docker-compose exec harvest harvest -v user --search=userId=$id --init --remove; done
+#+end_src
+
+Now, we can look at what those subawards look like:
+
+#+begin_src sparql :noweb yes :url http://localhost:18081/experts/sparql :format raw :wrap SRC ttl
+  <<prefixes>>
+  describe ?s ?o ?funder ?pass_funder
+  WHERE {
+    VALUES ?cas {"schladow" }
+
+    ?s ucdrp:subAwardOf ?o;
+       vivo:assignedBy ?funder;
+       vivo:relates ?pi;
+       .
+
+    ?o vivo:assignedBy ?pass_funder.
+
+    ?pi a ucdrp:person;
+        ucdrp:casId ?cas;
+        .
+  } limit 1
+#+end_src
+
+#+RESULTS:
+#+begin_SRC ttl
+@prefix private: <http://experts.ucdavis.edu/private/> .
+@prefix xsd:   <http://www.w3.org/2001/XMLSchema#> .
+@prefix FoR:   <http://experts.ucdavis.edu/concept/FoR/> .
+@prefix skos:  <http://www.w3.org/2004/02/skos/core#> .
+@prefix rdfs:  <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix ucdrp: <http://experts.ucdavis.edu/schema#> .
+@prefix purl:  <http://purl.org/ontology/bibo/> .
+@prefix aeq:   <http://experts.ucdavis.edu/queries/schema#> .
+@prefix iam:   <http://iam.ucdavis.edu/schema#> .
+@prefix authorship: <http://experts.ucdavis.edu/authorship/> .
+@prefix vivo:  <http://vivoweb.org/ontology/core#> .
+@prefix free:  <http://experts.ucdavis.edu/concept/free> .
+@prefix harvest_iam: <http://iam.ucdavis.edu/> .
+@prefix foaf:  <http://xmlns.com/foaf/0.1/> .
+@prefix oap:   <http://oapolicy.universityofcalifornia.edu/vocab#> .
+@prefix work:  <http://experts.ucdavis.edu/work/> .
+@prefix query: <http://experts.ucdavis.edu/schema/queries/> .
+@prefix afn:   <http://jena.apache.org/ARQ/function#> .
+@prefix harvest_oap: <http://oapolicy.universityofcalifornia.edu/> .
+@prefix vcard: <http://www.w3.org/2006/vcard/ns#> .
+@prefix q:     <http://experts.ucdavis.edu/queries/> .
+@prefix rdf:   <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix person: <http://experts.ucdavis.edu/person/> .
+@prefix bibo:  <http://purl.org/ontology/bibo/> .
+@prefix grant: <http://experts.ucdavis.edu/grant/> .
+@prefix experts: <http://experts.ucdavis.edu/> .
+@prefix obo:   <http://purl.obolibrary.org/obo/> .
+
+<http://experts.ucdavis.edu/grant/103199#subAwardOf_91a4d5c9c78d0de89b38ff408f49f39c>
+        vivo:assignedBy  <http://experts.ucdavis.edu/funding_org/5105> .
+
+<http://experts.ucdavis.edu/funding_org/5105>
+        a             vivo:FundingOrganization ;
+        rdfs:label    "NASA SHARED SERVICES CENTER" ;
+        vivo:assigns  grant:103199 .
+
+<http://experts.ucdavis.edu/funding_org/9261>
+        a             vivo:FundingOrganization ;
+        rdfs:label    "UNIVERSITY OF DELAWARE" ;
+        vivo:assigns  grant:103199 .
+
+grant:103199  a                vivo:Grant ;
+        rdfs:label             "Precursor Survey Mission at Conch Reef - NASA NEEMO Project" ;
+        ucdrp:grantType        vivo:Grant ;
+        ucdrp:subAwardOf       <http://experts.ucdavis.edu/grant/103199#subAwardOf_91a4d5c9c78d0de89b38ff408f49f39c> ;
+        vivo:assignedBy        <http://experts.ucdavis.edu/funding_org/9261> ;
+        vivo:dateTimeInterval  <http://experts.ucdavis.edu/grant/103199#duration> ;
+        vivo:relates           <http://experts.ucdavis.edu/admin_role/061807-103199> , person:85e478f7f126f709e4dd260b0a238945 , <http://experts.ucdavis.edu/grant/103199#role85e478f7f126f709e4dd260b0a238945-PI> ;
+        vivo:sponsorAwardId    "25987" ;
+        vivo:totalAwardAmount  2000 .
+#+end_SRC
+
+Okay! That looks pretty good.  We can expert this subset of grants data.
+
+
+#+begin_src bash
+      docker-compose exec fuseki curl -H "Accept:application/ld+json" http://fuseki:3030/experts/get | gzip > experts.json.gz
+#+end_src
+
+#+RESULTS:

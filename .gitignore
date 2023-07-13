@@ -6,3 +6,4 @@ rp-local-dev
 io
 .DS_Store
 k8s-deployment
+/qa-oapolicy/
